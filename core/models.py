@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 
@@ -45,6 +47,8 @@ class SubscriptionToNewsletter(models.Model):
     ip_address = models.GenericIPAddressField()
 
     is_verified = models.BooleanField(default=False)
+
+    unsubscribe_token = models.UUIDField(default=uuid.uuid4, unique=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

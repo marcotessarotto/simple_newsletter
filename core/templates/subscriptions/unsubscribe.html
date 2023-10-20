@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unsubscribe Confirmation</title>
+</head>
+<body>
+    <h1>Unsubscribe Confirmation</h1>
+    <p>Are you sure you want to unsubscribe from our newsletter?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Unsubscribe</button>
+    </form>
+</body>
+</html>

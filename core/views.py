@@ -1,6 +1,7 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import SubscriptionForm
-from .models import Newsletter
+from .models import Newsletter, SubscriptionToNewsletter
 
 
 def subscribe(request, short_name):
@@ -11,20 +12,45 @@ def subscribe(request, short_name):
 
     if request.method == 'POST':
         form = SubscriptionForm(request.POST)
+
+        print(form)
         if form.is_valid():
             subscription = form.save(commit=False)
             subscription.ip_address = get_client_ip(request)
+            subscription.newsletter = newsletter
             subscription.save()
             # You can add code here to send a confirmation email
             return render(request, 'subscriptions/confirmation.html')
+        else:
+            print("form is not valid")
+
+    context = {
+        'short_name': short_name,
+        'form': SubscriptionForm(initial={'newsletter': newsletter}),
+
+    }
+
+    return render(request, 'subscriptions/subscribe.html', context=context)
+
+
+def generate_unsubscribe_link(subscriber):
+    # Use Django's reverse to create the URL for the unsubscribe view
+    # Replace 'unsubscribe' with the name of your actual unsubscribe view
+    from django.urls import reverse
+    unsubscribe_url = reverse('unsubscribe', args=[str(subscriber.unsubscribe_token)])
+    return unsubscribe_url
+
+
+def unsubscribe(request, token):
+    subscriber = get_object_or_404(SubscriptionToNewsletter, unsubscribe_token=token)
+
+    if request.method == 'POST':
+        # Handle the unsubscription process, e.g., mark the subscriber as unsubscribed
+        subscriber.delete()  # Or update a 'subscribed' field to False
+        return HttpResponse("You have successfully unsubscribed.")
     else:
-        context = {
-            'short_name': short_name,
-            'form': SubscriptionForm(initial={'newsletter': newsletter}),
+        return render(request, 'subscriptions/unsubscribe.html', {'subscriber': subscriber})
 
-        }
-
-    return render(request, 'subscriptions/subscribe.html', context)
 
 
 def get_client_ip(request):

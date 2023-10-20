@@ -23,4 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('subscribe/<str:short_name>/', views.subscribe, name='subscribe'),
+
+    path('unsubscribe/<uuid:token>/', views.unsubscribe, name='unsubscribe'),
 ]
