@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  {% load bootstrap5 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+  <style>
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    label,
+    textarea,
+    select {
+        font-size: 24px;
+    }
+    .custom-font-size input {
+        font-size: 24px;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+
+  {% block content %}
+    <p>
+    <br><br><br><br>
+    <h1>Subscription is closed for this newsletter.</h1>
+    <br><br><br><br>
+<!--    <a href="https://www.bsbft2024.org/"><h2>Back to BSBF Trieste 2024</h2></a>-->
+    </p>
+  {% endblock %}
+</div>
+</body>
+</html>

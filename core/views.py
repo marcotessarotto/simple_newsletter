@@ -1,8 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import SubscriptionForm
+from .models import Newsletter
 
 
-def subscribe(request):
+def subscribe(request, short_name):
+    newsletter: Newsletter = get_object_or_404(Newsletter, short_name=short_name)
+
+    if not newsletter.allows_subscription:
+        return render(request, 'subscriptions/newsletter_subscription_closed.html')
+
     if request.method == 'POST':
         form = SubscriptionForm(request.POST)
         if form.is_valid():
@@ -12,8 +18,13 @@ def subscribe(request):
             # You can add code here to send a confirmation email
             return render(request, 'subscriptions/confirmation.html')
     else:
-        form = SubscriptionForm()
-    return render(request, 'subscriptions/subscribe.html', {'form': form})
+        context = {
+            'short_name': short_name,
+            'form': SubscriptionForm(initial={'newsletter': newsletter}),
+
+        }
+
+    return render(request, 'subscriptions/subscribe.html', context)
 
 
 def get_client_ip(request):

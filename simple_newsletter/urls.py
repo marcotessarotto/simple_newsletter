@@ -22,5 +22,5 @@ from core import views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('subscribe/', views.subscribe, name='subscribe'),
+    path('subscribe/<str:short_name>/', views.subscribe, name='subscribe'),
 ]
