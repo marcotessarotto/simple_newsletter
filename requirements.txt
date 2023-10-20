@@ -1,0 +1,14 @@
+Django~=4.2.6
+requests~=2.31.0
+django-model-utils
+mysqlclient
+gunicorn
+jinja2
+pytz
+python-dateutil
+django-jinja
+django-bootstrap-v5
+django-environ
+django-recaptcha
+django-ckeditor
+django-ckeditor-filebrowser-filer
