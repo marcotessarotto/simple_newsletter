@@ -1,7 +1,24 @@
 from django.contrib import admin
 
 from core.models import Newsletter, SubscriptionToNewsletter
-from simple_newsletter.admin_utils import ExportCsvMixin, ExportRawDataCsvMixin
+from simple_newsletter.admin_utils import ExportCsvMixin, ExportRawDataCsvMixin, ExportExcelMixin
+from django.utils.translation import gettext as _
+
+
+class NewsletterShortNameFilter(admin.SimpleListFilter):
+    title = _('Newsletter Short Name')
+    parameter_name = 'newsletter_short_name'
+
+    def lookups(self, request, model_admin):
+        # Get a list of distinct short names from CoreVisit
+        short_names = Newsletter.objects.values_list('short_name', flat=True).distinct()
+        return [(short_name, short_name) for short_name in short_names]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            # Filter RegistrationToVisit objects based on the selected short name
+            return queryset.filter(newsletter__short_name=self.value())
+        return queryset
 
 
 @admin.register(Newsletter)
@@ -16,7 +33,7 @@ class NewsletterAdmin(admin.ModelAdmin, ExportCsvMixin, ExportRawDataCsvMixin):
 
 
 @admin.register(SubscriptionToNewsletter)
-class SubscriptionToNewsletterAdmin(admin.ModelAdmin, ExportCsvMixin, ExportRawDataCsvMixin):
+class SubscriptionToNewsletterAdmin(admin.ModelAdmin, ExportExcelMixin):
 
     @admin.display(description='newsletter shortname', )
     def get_newsletter_shortname(self, obj):
@@ -25,7 +42,8 @@ class SubscriptionToNewsletterAdmin(admin.ModelAdmin, ExportCsvMixin, ExportRawD
     list_display = (
         'id',
         'get_newsletter_shortname',
-        'honorific',
+        # 'honorific',
+        'subscribed',
         'email',
         'name',
         'surname',
@@ -34,6 +52,6 @@ class SubscriptionToNewsletterAdmin(admin.ModelAdmin, ExportCsvMixin, ExportRawD
     )
 
     search_fields = ('id', 'email', 'name', 'surname',)
-    list_filter = ['is_verified', ]
+    list_filter = ['is_verified', NewsletterShortNameFilter]
 
     actions = ["export_as_excel"]

@@ -48,7 +48,11 @@ class SubscriptionToNewsletter(models.Model):
 
     is_verified = models.BooleanField(default=False)
 
+    # this is used to unsubscribe and is automatically generated
     unsubscribe_token = models.UUIDField(default=uuid.uuid4, unique=True)
+
+    subscribed = models.BooleanField(default=True)
+    unsubscribed_at = models.DateTimeField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

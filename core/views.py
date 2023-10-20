@@ -1,5 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+
 from .forms import SubscriptionForm
 from .models import Newsletter, SubscriptionToNewsletter
 
@@ -46,7 +48,11 @@ def unsubscribe(request, token):
 
     if request.method == 'POST':
         # Handle the unsubscription process, e.g., mark the subscriber as unsubscribed
-        subscriber.delete()  # Or update a 'subscribed' field to False
+        subscriber.subscribed = False
+        subscriber.unsubscribed_at = timezone.now()
+        subscriber.save()
+
+        # subscriber.delete()  # Or update a 'subscribed' field to False
         return HttpResponse("You have successfully unsubscribed.")
     else:
         return render(request, 'subscriptions/unsubscribe.html', {'subscriber': subscriber})
