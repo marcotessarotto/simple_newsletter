@@ -39,6 +39,8 @@ DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 
+RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY')
+RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY')
 
 # Application definition
 
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'captcha',
     'core',
+    'bootstrap5',
 ]
 
 MIDDLEWARE = [
