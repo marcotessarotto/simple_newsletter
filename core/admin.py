@@ -4,6 +4,11 @@ from core.models import Newsletter, SubscriptionToNewsletter
 from simple_newsletter.admin_utils import ExportCsvMixin, ExportRawDataCsvMixin, ExportExcelMixin
 from django.utils.translation import gettext as _
 
+# set django admin site header
+admin.site.site_header = "Simple Newsletter Administration"
+admin.site.site_title = "Simple Newsletter Admin Portal"
+admin.site.index_title = "Welcome to Simple Newsletter Portal"
+
 
 class NewsletterShortNameFilter(admin.SimpleListFilter):
     title = _('Newsletter Short Name')

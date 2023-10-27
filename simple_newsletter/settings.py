@@ -36,11 +36,15 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = []
 ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 
 RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY')
 RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY')
+
+MEDIA_ROOT = '/opt/media/simple_newsletter/'
+MEDIA_URL = '/media/'
+
+CKEDITOR_UPLOAD_PATH = 'content/ckeditor/'
 
 # Application definition
 
@@ -54,7 +58,12 @@ INSTALLED_APPS = [
     'captcha',
     'core',
     'bootstrap5',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
+
+# rechapcha settings:
+# https://www.google.com/recaptcha/admin
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

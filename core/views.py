@@ -39,23 +39,22 @@ def generate_unsubscribe_link(subscriber):
     # Use Django's reverse to create the URL for the unsubscribe view
     # Replace 'unsubscribe' with the name of your actual unsubscribe view
     from django.urls import reverse
-    unsubscribe_url = reverse('unsubscribe', args=[str(subscriber.unsubscribe_token)])
-    return unsubscribe_url
+    return reverse('unsubscribe', args=[str(subscriber.unsubscribe_token)])
 
 
 def unsubscribe(request, token):
     subscriber = get_object_or_404(SubscriptionToNewsletter, unsubscribe_token=token)
 
-    if request.method == 'POST':
-        # Handle the unsubscription process, e.g., mark the subscriber as unsubscribed
-        subscriber.subscribed = False
-        subscriber.unsubscribed_at = timezone.now()
-        subscriber.save()
-
-        # subscriber.delete()  # Or update a 'subscribed' field to False
-        return HttpResponse("You have successfully unsubscribed.")
-    else:
+    if request.method != 'POST':
         return render(request, 'subscriptions/unsubscribe.html', {'subscriber': subscriber})
+
+    # Handle the unsubscription process, e.g., mark the subscriber as unsubscribed
+    subscriber.subscribed = False
+    subscriber.unsubscribed_at = timezone.now()
+    subscriber.save()
+
+    # subscriber.delete()  # Or update a 'subscribed' field to False
+    return HttpResponse("You have successfully unsubscribed.")
 
 
 
