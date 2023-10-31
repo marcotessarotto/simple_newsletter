@@ -60,7 +60,7 @@ class SubscriptionToNewsletter(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"#{self.id} {self.newsletter.name} - {self.email} - {self.name} {self.surname} - {self.created_at}"
+        return f"#{self.id} {self.newsletter.name} - {self.from_email} - {self.name} {self.surname} - {self.created_at}"
 
 
 class Message(models.Model):
