@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from core.models import Newsletter, SubscriptionToNewsletter
+from core.models import Newsletter, SubscriptionToNewsletter, Message
 from simple_newsletter.admin_utils import ExportCsvMixin, ExportRawDataCsvMixin, ExportExcelMixin
 from django.utils.translation import gettext as _
 
@@ -60,3 +60,20 @@ class SubscriptionToNewsletterAdmin(admin.ModelAdmin, ExportExcelMixin):
     list_filter = ['is_verified', NewsletterShortNameFilter]
 
     actions = ["export_as_excel"]
+
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin, ExportCsvMixin, ExportRawDataCsvMixin):
+
+    @admin.display(description='newsletter shortname', )
+    def get_newsletter_shortname(self, obj):
+        return obj.newsletter.short_name if obj.newsletter else None
+
+    list_display = ('id',
+                    'get_newsletter_shortname',
+                    'subject', 'content', 'sent', 'sent_at',
+                    'created_at',
+                    )
+    search_fields = ('id', 'subject', 'content',)
+    # list_filter = ['enabled', 'allows_subscription', ]
+    actions = ["export_as_csv", "export_raw_data_as_csv"]

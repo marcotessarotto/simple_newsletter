@@ -152,3 +152,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+
+# For local testing purposes, you can use the console backend which prints emails to the console instead of sending them:
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

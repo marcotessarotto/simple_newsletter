@@ -1,5 +1,6 @@
 import uuid
 
+from ckeditor.fields import RichTextField
 from django.db import models
 
 
@@ -59,3 +60,19 @@ class SubscriptionToNewsletter(models.Model):
 
     def __str__(self):
         return f"#{self.id} {self.newsletter.name} - {self.email} - {self.name} {self.surname} - {self.created_at}"
+
+
+class Message(models.Model):
+    newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=255)
+    content = RichTextField()
+
+    sent = models.BooleanField(default=False)
+    sent_at = models.DateTimeField(blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.subject
+
