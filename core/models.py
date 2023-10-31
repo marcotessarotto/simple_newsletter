@@ -1,6 +1,7 @@
 import uuid
 
 from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 
 
@@ -66,6 +67,7 @@ class Message(models.Model):
     newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE)
     subject = models.CharField(max_length=255)
     content = RichTextField()
+    content2 = RichTextUploadingField()
 
     sent = models.BooleanField(default=False)
     sent_at = models.DateTimeField(blank=True, null=True)
