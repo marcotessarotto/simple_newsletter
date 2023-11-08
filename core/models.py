@@ -91,6 +91,8 @@ class Visitor(models.Model):
 
     subscribe_token = models.UUIDField(default=uuid.uuid4, unique=True)
 
+    newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE, blank=True, null=True)
+
     email_sent = models.BooleanField(default=False)
     email_sent_at = models.DateTimeField(blank=True, null=True)
 
@@ -101,3 +103,27 @@ class Visitor(models.Model):
     class Meta:
         verbose_name = "Visitor"
         verbose_name_plural = "Visitors"
+
+
+class VisitSurvey(models.Model):
+    # Assuming there is a related Visitor model, you can uncomment the following line
+    # visitor = models.ForeignKey('Visitor', on_delete=models.CASCADE)
+
+    participated = models.BooleanField("Did you participate in the visit?", default=False)
+    met_expectations = models.BooleanField("Did it meet your expectations?", default=False)
+    aspects_made_impression = models.TextField("What are the main aspects of the visit that made an impression on you?",
+                                               blank=True)
+    suggestions_for_improvement = models.TextField(
+        "What suggestions do you have to improve future visits to big science organizations?", blank=True)
+    interested_in_future_visits = models.BooleanField(
+        "Are you interested in participating in future visits to big science organizations?", default=False)
+    participate_in_bsbf = models.BooleanField("Will you participate in the BSBF 2024 in Trieste?", default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Survey {self.id}"
+
+    class Meta:
+        verbose_name = "Visit Survey"
+        verbose_name_plural = "Visit Surveys"

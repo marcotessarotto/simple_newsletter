@@ -2,8 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
-from .forms import SubscriptionForm
-from .models import Newsletter, SubscriptionToNewsletter
+from .forms import SubscriptionForm, VisitSurveyForm
+from .models import Newsletter, SubscriptionToNewsletter, Visitor
 
 
 def subscribe(request, short_name):
@@ -68,4 +68,41 @@ def get_client_ip(request):
 
 
 def visit_survey_newsletter_subscription(request, token):
-    return render(request, 'subscriptions/visit_survey_newsletter_subscription.html')
+
+    visitor: Visitor = get_object_or_404(Visitor, subscribe_token=token)
+
+    if request.method == 'POST':
+        form = SubscriptionForm(request.POST)
+        if form.is_valid():
+            subscription = form.save(commit=False)
+            subscription.ip_address = get_client_ip(request)
+            subscription.newsletter = newsletter
+            subscription.save()
+            # You can add code here to send a confirmation email
+            return render(request, 'subscriptions/confirmation.html')
+        else:
+            print("form is not valid")
+    else:
+        # Map the fields from Visitor to the corresponding fields in SubscriptionForm
+        initial_data = {
+            'email': visitor.email_address,
+            'name': visitor.first_name,
+            'surname': visitor.last_name,
+            'nationality': visitor.nationality,
+            'company': visitor.company_name,
+            'role': visitor.job_position,
+            'telephone': visitor.mobile_phone,
+        }
+        form = SubscriptionForm(initial=initial_data)
+
+        survey_form = VisitSurveyForm()
+
+    context = {
+        'form': form,
+        'survey_form': survey_form,
+        'short_name': 'bsbf2021',
+        'visitor': visitor,
+    }
+
+
+    return render(request, 'subscriptions/visit_survey_newsletter_subscription.html', context=context)

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from core.models import Newsletter, SubscriptionToNewsletter, Message, Visitor
+from core.models import Newsletter, SubscriptionToNewsletter, Message, Visitor, VisitSurvey
 from simple_newsletter.admin_utils import ExportCsvMixin, ExportRawDataCsvMixin, ExportExcelMixin
 from django.utils.translation import gettext as _
 
@@ -83,3 +83,9 @@ class MessageAdmin(admin.ModelAdmin, ExportCsvMixin, ExportRawDataCsvMixin):
 class VisitorAdmin(admin.ModelAdmin):
     list_display = ('id', 'company_name', 'last_name', 'first_name', 'job_position', 'email_address', 'nationality', 'email_sent')
     list_filter = [ 'nationality', 'email_sent']
+
+
+@admin.register(VisitSurvey)
+class VisitSurveyAdmin(admin.ModelAdmin):
+    list_display = ('id', 'participated', 'met_expectations', 'interested_in_future_visits', 'participate_in_bsbf', 'created_at')
+    list_filter = [ 'participated', 'met_expectations', 'interested_in_future_visits', 'participate_in_bsbf']
