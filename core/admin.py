@@ -81,5 +81,5 @@ class MessageAdmin(admin.ModelAdmin, ExportCsvMixin, ExportRawDataCsvMixin):
 
 @admin.register(Visitor)
 class VisitorAdmin(admin.ModelAdmin):
-    list_display = ('id', 'company_name', 'last_name', 'first_name', 'job_position', 'email_address', 'nationality')
-    list_filter = ['company_name', 'nationality', ]
+    list_display = ('id', 'company_name', 'last_name', 'first_name', 'job_position', 'email_address', 'nationality', 'email_sent')
+    list_filter = [ 'nationality', 'email_sent']

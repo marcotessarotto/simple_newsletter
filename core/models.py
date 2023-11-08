@@ -91,6 +91,10 @@ class Visitor(models.Model):
 
     subscribe_token = models.UUIDField(default=uuid.uuid4, unique=True)
 
+    email_sent = models.BooleanField(default=False)
+    email_sent_at = models.DateTimeField(blank=True, null=True)
+
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
