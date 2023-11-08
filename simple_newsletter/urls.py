@@ -24,6 +24,9 @@ from simple_newsletter import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    path('visit_survey_newsletter_subscription/<uuid:token>/', views.visit_survey_newsletter_subscription,
+         name='visit_survey_newsletter_subscription'),
+
     path('subscribe/<str:short_name>/', views.subscribe, name='subscribe'),
 
     path('unsubscribe/<uuid:token>/', views.unsubscribe, name='unsubscribe'),

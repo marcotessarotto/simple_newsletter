@@ -65,3 +65,7 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
+def visit_survey_newsletter_subscription(request, token):
+    return render(request, 'subscriptions/visit_survey_newsletter_subscription.html')

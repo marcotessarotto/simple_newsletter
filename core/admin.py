@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from core.models import Newsletter, SubscriptionToNewsletter, Message
+from core.models import Newsletter, SubscriptionToNewsletter, Message, Visitor
 from simple_newsletter.admin_utils import ExportCsvMixin, ExportRawDataCsvMixin, ExportExcelMixin
 from django.utils.translation import gettext as _
 
@@ -77,3 +77,9 @@ class MessageAdmin(admin.ModelAdmin, ExportCsvMixin, ExportRawDataCsvMixin):
     search_fields = ('id', 'subject', 'content',)
     # list_filter = ['enabled', 'allows_subscription', ]
     actions = ["export_as_csv", "export_raw_data_as_csv"]
+
+
+@admin.register(Visitor)
+class VisitorAdmin(admin.ModelAdmin):
+    list_display = ('id', 'company_name', 'last_name', 'first_name', 'job_position', 'email_address', 'nationality')
+    list_filter = ['company_name', 'nationality', ]
