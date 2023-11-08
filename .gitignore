@@ -165,3 +165,5 @@ __pycache__/
 db.sqlite3
 
 reserved_notes.txt
+
+staticfiles/
