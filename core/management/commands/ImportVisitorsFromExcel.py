@@ -3,6 +3,7 @@ import openpyxl
 
 from core.models import Visitor
 
+
 def import_excel_to_django_model(excel_file_path):
     # Load the workbook and select the first worksheet
     wb = openpyxl.load_workbook(excel_file_path)
@@ -10,6 +11,15 @@ def import_excel_to_django_model(excel_file_path):
 
     # Iterate through each row in the worksheet and fetch values
     for row in ws.iter_rows(min_row=2, values_only=True):  # Assuming row 1 is the header
+
+        row_id=row[0]
+
+        # check if visitor with this id already exists
+        rs = Visitor.objects.filter(id=row_id)
+        if rs:
+            print(f'Visitor with ID {id} already exists.')
+            continue
+
         visitor, created = Visitor.objects.get_or_create(
             id=row[0],
             defaults={

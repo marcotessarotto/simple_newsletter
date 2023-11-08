@@ -86,7 +86,7 @@ class Visitor(models.Model):
     first_name = models.CharField("First Name", max_length=100)
     job_position = models.CharField("Job Position", max_length=100)
     nationality = models.CharField(max_length=100, blank=True)
-    mobile_phone = models.CharField("Mobile Phone", max_length=20, blank=True)
+    mobile_phone = models.CharField("Mobile Phone", max_length=40, blank=True, null=True)
     email_address = models.EmailField("Email Address", max_length=255)
 
     subscribe_token = models.UUIDField(default=uuid.uuid4, unique=True)
