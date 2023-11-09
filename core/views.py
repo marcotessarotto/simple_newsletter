@@ -64,7 +64,6 @@ def unsubscribe(request, token):
     return HttpResponse("You have successfully unsubscribed.")
 
 
-
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -75,7 +74,6 @@ def get_client_ip(request):
 
 
 def visit_survey_newsletter_subscription(request, token):
-
     visitor: Visitor = get_object_or_404(Visitor, subscribe_token=token)
 
     if request.method == 'POST':
@@ -110,6 +108,5 @@ def visit_survey_newsletter_subscription(request, token):
         'short_name': 'BSBF Trieste 2024',
         'visitor': visitor,
     }
-
 
     return render(request, 'subscriptions/visit_survey_newsletter_subscription.html', context=context)
