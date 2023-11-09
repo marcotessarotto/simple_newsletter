@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from core import views
+from core.views import proxy_django_auth
 from simple_newsletter import settings
 
 urlpatterns = [
@@ -32,6 +33,9 @@ urlpatterns = [
     path('unsubscribe/<uuid:token>/', views.unsubscribe, name='unsubscribe'),
 
     path('ckeditor/', include('ckeditor_uploader.urls')),
+
+    # used by nginx to verify authentication and access to media files.
+    path('proxy_django_auth/', proxy_django_auth, name='proxy_django_auth'),
 ]
 
 if settings.DEBUG:

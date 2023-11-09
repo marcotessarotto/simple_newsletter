@@ -6,6 +6,13 @@ from .forms import SubscriptionForm, VisitSurveyForm
 from .models import Newsletter, SubscriptionToNewsletter, Visitor
 
 
+def proxy_django_auth(request):
+    """used for authentication by nginx when accessing static media files"""
+    if request.user.is_authenticated:
+        return HttpResponse(status=200)
+    return HttpResponse(status=403)
+
+
 def subscribe(request, short_name):
     newsletter: Newsletter = get_object_or_404(Newsletter, short_name=short_name)
 
