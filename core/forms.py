@@ -43,10 +43,10 @@ class VisitSurveyForm(forms.ModelForm):
             'participate_in_bsbf': forms.RadioSelect(choices=((False, 'No'), (True, 'Yes'))),
         }
         labels = {
-            'participated': "Did you participate in the visit?",
+            'participated': "Did you participate in the BSBF visit?",
             'met_expectations': "Did it meet your expectations?",
-            'aspects_made_impression': "What are the main aspects of the visit that made an impression on you?",
-            'suggestions_for_improvement': "What suggestions do you have to improve future visits to big science organizations?",
-            'interested_in_future_visits': "Are you interested in participating in future visits to big science organizations?",
-            'participate_in_bsbf': "Will you participate in the BSBF 2024 in Trieste?",
+            'aspects_made_impression': "What are the main aspects of the  BSBF visit relevant to you?",
+            'suggestions_for_improvement': "What suggestions do you have to improve future BSBF visits to Big Science Organizations?",
+            'interested_in_future_visits': "Are you interested in participating in next BSBF visits to CERN, ESA, ESO,  ESS, F4E or European XFEL, etc?",
+            'participate_in_bsbf': "Will you participate in the next edition of BSBF in Trieste (IT),  1-4 October 2024?",
         }

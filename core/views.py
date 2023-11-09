@@ -100,7 +100,7 @@ def visit_survey_newsletter_subscription(request, token):
     context = {
         'form': form,
         'survey_form': survey_form,
-        'short_name': 'bsbf2021',
+        'short_name': 'BSBF Trieste 2024',
         'visitor': visitor,
     }
 

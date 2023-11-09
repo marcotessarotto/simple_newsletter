@@ -4,40 +4,7 @@
 
 {% block content %}
 
-    <h1>Survey and newsletter subscription</h1>
-    <p>Thank you for subscribing to our survey and newsletter. You will receive a confirmation email shortly. Please click the confirmation link to complete your subscription.</p>
-
-    <h2>What is this?</h2>
-    <p>By subscribing to our survey and newsletter, you will receive an email when we publish a new survey or newsletter. You can unsubscribe at any time by clicking the unsubscribe link in the email.</p>
-
-    <h2>Why should I subscribe?</h2>
-    <p>By subscribing to our survey and newsletter, you will be notified when we publish a new survey or newsletter. You will also be able to participate in our surveys and provide feedback on our newsletters.</p>
-
-    <h2>How do I unsubscribe?</h2>
-    <p>You can unsubscribe at any time by clicking the unsubscribe link in the email.</p>
-
-    <h2>How do I contact you?</h2>
-    <p>You can contact us by replying to the email.</p>
-
-    <h2>How do I know my email address is safe?</h2>
-    <p>We will never share your email address with anyone else. We will only use your email address to send you our survey and newsletter.</p>
-
-    <h2>How do I know my email address is secure?</h2>
-    <p>We use industry standard security measures to protect your email address.</p>
-
-    <h2>How do I know my email address is private?</h2>
-    <p>We will never share your email address with anyone else. We will only use your email address to send you our survey and newsletter.</p>
-
-    <h2>How do I know my email address is confidential?</h2>
-    <p>We will never share your email address with anyone else. We will only use your email address to send you our survey and newsletter.</p>
-
-    <h2>How do I know my email address is anonymous?</h2>
-    <p>We will never share your email address with anyone else. We will only use your email address to send you our survey and newsletter.</p>
-
-    <h2>How do I know my email address is protected?</h2>
-    <p>We use industry standard security measures to protect your email address.</p>
-
-    <h1>Subscribe to newsletter {{ short_name }}</h1>
+    <h1>Survey on BSBF visit F4E at ITER Organization (Cadarache (FR), 25th October 2023)</h1>
 
     {% if form.errors %}
     <p style="color: red;">Please correct the errors below:</p>
@@ -54,11 +21,18 @@
       <table width="200%" class="table">
         {% for field in survey_form %}
           <tr>
-            <th width="20%">{{ field.label_tag }}</th>
-            <td width="80%">{{ field }}</td>
+            <th width="40%">{{ field.label_tag }}</th>
+            <td width="60%">{{ field }}</td>
           </tr>
         {% endfor %}
+          <tr>
+              <td colspan="2">
 
+
+    <h1>Subscribe to newsletter {{ short_name }}</h1>
+
+              </td>
+          </tr>
           <tr>
               <td colspan="2"  align="center">
                   <div class="d-grid gap-2 col-6 mx-auto">
