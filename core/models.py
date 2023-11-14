@@ -13,6 +13,8 @@ class Newsletter(models.Model):
     enabled = models.BooleanField(default=False)
     allows_subscription = models.BooleanField(default=True)
 
+    privacy_policy = RichTextField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

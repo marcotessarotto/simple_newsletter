@@ -73,6 +73,39 @@ def get_client_ip(request):
     return ip
 
 
+def survey_newsletter_subscription(request, short_name):
+    newsletter: Newsletter = get_object_or_404(Newsletter, short_name=short_name)
+
+    if not newsletter.allows_subscription:
+        return render(request, 'subscriptions/newsletter_subscription_closed.html')
+
+    if request.method == 'POST':
+        form = SubscriptionForm(request.POST)
+
+        if form.is_valid():
+
+            subscription = form.save(commit=False)
+            subscription.ip_address = get_client_ip(request)
+            subscription.newsletter = newsletter
+            subscription.save()
+            # You can add code here to send a confirmation email
+            return render(request, 'subscriptions/confirmation.html')
+        else:
+            print("form is not valid")
+    else:
+        form = SubscriptionForm()
+
+        survey_form = VisitSurveyForm()
+
+    context = {
+        'form': form,
+        'survey_form': survey_form,
+        'short_name': 'BSBF Trieste 2024',
+    }
+
+    return render(request, 'subscriptions/visit_survey_newsletter_subscription.html', context=context)
+
+
 def visit_survey_newsletter_subscription(request, token):
     visitor: Visitor = get_object_or_404(Visitor, subscribe_token=token)
 
@@ -110,3 +143,5 @@ def visit_survey_newsletter_subscription(request, token):
     }
 
     return render(request, 'subscriptions/visit_survey_newsletter_subscription.html', context=context)
+
+

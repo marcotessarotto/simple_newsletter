@@ -25,6 +25,9 @@ from simple_newsletter import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+path('survey_newsletter_subscription/<str:short_name>/', views.survey_newsletter_subscription,
+         name='survey_newsletter_subscription'),
+
     path('visit_survey_newsletter_subscription/<uuid:token>/', views.visit_survey_newsletter_subscription,
          name='visit_survey_newsletter_subscription'),
 
