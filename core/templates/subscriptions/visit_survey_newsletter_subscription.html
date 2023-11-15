@@ -6,13 +6,27 @@
 
     <h1>Survey on BSBF visit F4E at ITER Organization</h1>
 
-    {% if form.errors %}
-    <p style="color: red;">Please correct the errors below: (1)</p>
-    {% endif %}
+<!--    {% if form.errors %}-->
+<!--    <p style="color: red;">Please correct the errors below: (1)</p>-->
+<!--        <table>-->
+<!--            <tr>-->
+<!--                <th>Field</th>-->
+<!--                <th>Error</th>-->
+<!--            </tr>-->
+<!--            {% for field, errors in form.errors.items %}-->
+<!--                {% for error in errors %}-->
+<!--                    <tr>-->
+<!--                        <td>{{ field|capfirst }}</td>-->
+<!--                        <td>{{ error }}</td>-->
+<!--                    </tr>-->
+<!--                {% endfor %}-->
+<!--            {% endfor %}-->
+<!--        </table>-->
+<!--    {% endif %}-->
 
-    {% if survey_form.errors %}
-    <p style="color: red;">Please correct the errors below: (2)</p>
-    {% endif %}
+<!--    {% if survey_form.errors %}-->
+<!--    <p style="color: red;">Please correct the errors below: (2)</p>-->
+<!--    {% endif %}-->
 
 
     <form method="post">
@@ -20,18 +34,7 @@
 
       <table width="200%" class="table">
 
-        <!-- Display non-field-specific errors here -->
-        {% if form.non_field_errors %}
-          <tr>
-            <td colspan="2">
-              <div class="alert alert-danger">
-                {% for error in form.non_field_errors %}
-                  <p>{{ error }}</p>
-                {% endfor %}
-              </div>
-            </td>
-          </tr>
-        {% endif %}
+
 
         {% for field in survey_form %}
           <tr>
@@ -39,22 +42,69 @@
             <td width="60%">{{ field }}</td>
           </tr>
         {% endfor %}
+
+
           <tr>
               <td colspan="2">
 
 
-    <h1>Subscribe to newsletter {{ short_name }}</h1>
+                <h1>Subscribe to newsletter {{ short_name }}</h1>
 
               </td>
           </tr>
-        {% for field in form %}
+
+
+    {% if form.errors %}
+        <tr>
+            <td colspan="2" style="color: red;">
+                <div class="alert alert-danger">
+                    <p>Please correct the errors below:</p>
+                </div>
+
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <div class="alert alert-danger">
+                            {% if field == 'captcha' %}
+                                <!-- Custom handling for captcha errors -->
+                                <h4>Captcha Error: {{ error }}</h4>
+                            {% else %}
+                                <h4>{{ error }}</h4>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </td>
+        </tr>
+    {% endif %}
+
+
+    {% for field in form %}
+        <tr>
+            <th width="40%"> <label for="{{ field.id_for_label }}">{{ field.label|safe }}</label></th>
+            <td width="60%">
+                {{ field }}
+                {% if field.errors %}
+                    <div class="alert alert-danger">
+                        {% for error in field.errors %}
+                            <h4>{{ error }}</h4>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+
+
+
           <tr>
-            <th width="40%">{{ field.label_tag }}</th>
-            <td width="60%">{{ field }}</td>
+              <th style="font-size: 24px">Privacy policy</th>
+              <td>
+                <div id="myHtmlContent" contenteditable="false">
+                    {{ privacy_policy|safe }}
+                </div>
+
+              </td>
           </tr>
-        {% endfor %}
-
-
 
 
           <tr>

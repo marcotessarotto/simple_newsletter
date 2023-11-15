@@ -18,6 +18,21 @@
         font-size: 24px;
     }
 
+    #myHtmlContent {
+      width: 100%;   /* Adjust the width as needed */
+      height: 200px; /* Set a fixed height; content longer than this will cause a scrollbar to appear */
+      overflow-y: auto; /* Enables vertical scrolling */
+      border: 1px solid #ccc; /* Adds a border to the div */
+      padding: 1px; /* Adds some space inside the div */
+      /*white-space: pre-wrap;*/ /* Preserves spaces and line breaks */
+      resize: none; /* Prevents resizing the div */
+    }
+
+    #myHtmlContent div {
+        margin-bottom: 1px; /* Reduces the space below each div */
+        line-height: 1.2; /* Adjusts the height of lines within the div, if necessary */
+    }
+
   </style>
 </head>
 <body>

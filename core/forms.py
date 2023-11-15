@@ -38,7 +38,7 @@ class SubscriptionForm(forms.ModelForm):
 
         if not privacy_policy_accepted:
             print("privacy_policy_accepted is not True")
-            raise ValidationError("Accepting the Privacy Policy is mandatory to complete the subscription process.")
+            raise ValidationError("Accepting the Privacy Policy is mandatory to complete the subscription process to the newsletter.")
 
         return cleaned_data
 
