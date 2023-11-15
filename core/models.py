@@ -52,6 +52,12 @@ class SubscriptionToNewsletter(models.Model):
 
     is_verified = models.BooleanField(default=False)
 
+    privacy_policy_accepted = models.BooleanField(blank=False,
+                                                  choices=BOOLEAN_CHOICES,
+                                                  verbose_name="Do you accept the Privacy Policy?")
+
+    subscribe_token = models.UUIDField(default=uuid.uuid4, unique=True)
+
     # this is used to unsubscribe and is automatically generated
     unsubscribe_token = models.UUIDField(default=uuid.uuid4, unique=True)
 
@@ -62,7 +68,7 @@ class SubscriptionToNewsletter(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"#{self.id} {self.newsletter.name} - {self.from_email} - {self.name} {self.surname} - {self.created_at}"
+        return f"#{self.id} {self.newsletter.name} - {self.name} {self.surname} - {self.created_at}"
 
 
 class Message(models.Model):
@@ -120,6 +126,8 @@ class VisitSurvey(models.Model):
     interested_in_future_visits = models.BooleanField(
         "Are you interested in participating in future visits to big science organizations?", default=False)
     participate_in_bsbf = models.BooleanField("Will you participate in the BSBF 2024 in Trieste?", default=False)
+
+
 
     created_at = models.DateTimeField(auto_now_add=True)
 

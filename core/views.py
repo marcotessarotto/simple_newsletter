@@ -82,6 +82,8 @@ def survey_newsletter_subscription(request, short_name):
     if request.method == 'POST':
         form = SubscriptionForm(request.POST)
 
+        survey_form = VisitSurveyForm(request.POST)
+
         if form.is_valid():
 
             subscription = form.save(commit=False)
@@ -92,6 +94,9 @@ def survey_newsletter_subscription(request, short_name):
             return render(request, 'subscriptions/confirmation.html')
         else:
             print("form is not valid")
+
+
+
     else:
         form = SubscriptionForm()
 

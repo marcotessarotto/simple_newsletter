@@ -1,5 +1,8 @@
 from django import forms
 from captcha.fields import ReCaptchaField
+from django.core.exceptions import ValidationError
+from django.utils.safestring import mark_safe
+
 from .models import SubscriptionToNewsletter
 from .models import VisitSurvey
 
@@ -17,10 +20,27 @@ class SubscriptionForm(forms.ModelForm):
                   'company',
                   'role',
                   'telephone',
+                  'privacy_policy_accepted',
                   ]
         widgets = {
             'ip_address': forms.HiddenInput()
         }
+        labels = {
+            'privacy_policy_accepted': mark_safe("Please note that accepting the Privacy Policy is mandatory for completing the subscription process.<br>"
+                                                 "<strong>Do you accept the Privacy Policy?</strong>"),
+
+            'subscription_to_newsletter': mark_safe("Would you like to subscribe to <strong>BSBF Trieste 2024 newsletter</strong> in order to be updated on the next steps towards BSBF 2024 edition?"),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        privacy_policy_accepted = cleaned_data.get("privacy_policy_accepted")
+
+        if not privacy_policy_accepted:
+            print("privacy_policy_accepted is not True")
+            raise ValidationError("Accepting the Privacy Policy is mandatory to complete the subscription process.")
+
+        return cleaned_data
 
 
 class VisitSurveyForm(forms.ModelForm):

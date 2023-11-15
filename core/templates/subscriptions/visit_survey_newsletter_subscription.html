@@ -7,11 +7,11 @@
     <h1>Survey on BSBF visit F4E at ITER Organization</h1>
 
     {% if form.errors %}
-    <p style="color: red;">Please correct the errors below:</p>
+    <p style="color: red;">Please correct the errors below: (1)</p>
     {% endif %}
 
     {% if survey_form.errors %}
-    <p style="color: red;">Please correct the errors below:</p>
+    <p style="color: red;">Please correct the errors below: (2)</p>
     {% endif %}
 
 
@@ -19,6 +19,20 @@
         {% csrf_token %}
 
       <table width="200%" class="table">
+
+        <!-- Display non-field-specific errors here -->
+        {% if form.non_field_errors %}
+          <tr>
+            <td colspan="2">
+              <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            </td>
+          </tr>
+        {% endif %}
+
         {% for field in survey_form %}
           <tr>
             <th width="40%">{{ field.label_tag }}</th>
@@ -33,6 +47,16 @@
 
               </td>
           </tr>
+        {% for field in form %}
+          <tr>
+            <th width="40%">{{ field.label_tag }}</th>
+            <td width="60%">{{ field }}</td>
+          </tr>
+        {% endfor %}
+
+
+
+
           <tr>
               <td colspan="2"  align="center">
                   <div class="d-grid gap-2 col-6 mx-auto">
@@ -45,7 +69,4 @@
 
     </form>
 
-
-   <h1>Thank you for subscribing!</h1>
-    <p>You will receive a confirmation email shortly. Please click the confirmation link to complete your subscription.</p>
 {% endblock %}
