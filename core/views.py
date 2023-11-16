@@ -110,21 +110,9 @@ def survey_newsletter_subscription(request, short_name):
             subscription.ip_address = get_client_ip(request)
             subscription.newsletter = newsletter
             subscription.save()
-            # You can add code here to send a confirmation email
 
-            # create thread to send email
-            # send email
-            # send email to visitor
-
+            # this step will send a confirmation email
             process_subscription_task.delay(subscription.id)
-
-            # send_custom_email_task.delay(
-            #     newsletter.from_email,
-            #     subscription.email,
-            #     'Your Subject',
-            #     '<p>Your HTML content here</p>',
-            #     bcc=['bcc@example.com']
-            # )
 
             context = {
                 'newsletter_title': newsletter.name,
