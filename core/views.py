@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from .forms import SubscriptionForm, VisitSurveyForm
 from .models import Newsletter, SubscriptionToNewsletter, Visitor
+from .tasks import send_custom_email_task, process_subscription_task
 
 
 def proxy_django_auth(request):
@@ -11,6 +12,25 @@ def proxy_django_auth(request):
     if request.user.is_authenticated:
         return HttpResponse(status=200)
     return HttpResponse(status=403)
+
+
+def confirm_subscription(request, subscription_id, token):
+    subscription: SubscriptionToNewsletter = get_object_or_404(SubscriptionToNewsletter, id=subscription_id,
+                                                               subscribe_token=token)
+
+    if subscription.subscription_confirmed:
+        return render(request, 'subscriptions/subscription_already_confirmed.html')
+
+    subscription.subscription_confirmed = True
+    subscription.subscription_confirmed_at = timezone.now()
+    subscription.save()
+
+    context = {
+        'newsletter_title': subscription.newsletter.name,
+        'signature': subscription.newsletter.signature,
+    }
+
+    return render(request, 'subscriptions/subscription_confirmed_by_user.html', context=context)
 
 
 def subscribe(request, short_name):
@@ -86,7 +106,7 @@ def survey_newsletter_subscription(request, short_name):
 
         if form.is_valid():
 
-            subscription = form.save(commit=False)
+            subscription: SubscriptionToNewsletter = form.save(commit=False)
             subscription.ip_address = get_client_ip(request)
             subscription.newsletter = newsletter
             subscription.save()
@@ -96,6 +116,15 @@ def survey_newsletter_subscription(request, short_name):
             # send email
             # send email to visitor
 
+            process_subscription_task.delay(subscription.id)
+
+            # send_custom_email_task.delay(
+            #     newsletter.from_email,
+            #     subscription.email,
+            #     'Your Subject',
+            #     '<p>Your HTML content here</p>',
+            #     bcc=['bcc@example.com']
+            # )
 
             context = {
                 'newsletter_title': newsletter.name,

@@ -25,7 +25,7 @@ from simple_newsletter import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-path('survey_newsletter_subscription/<str:short_name>/', views.survey_newsletter_subscription,
+    path('survey_newsletter_subscription/<str:short_name>/', views.survey_newsletter_subscription,
          name='survey_newsletter_subscription'),
 
     path('visit_survey_newsletter_subscription/<uuid:token>/', views.visit_survey_newsletter_subscription,
@@ -34,6 +34,9 @@ path('survey_newsletter_subscription/<str:short_name>/', views.survey_newsletter
     path('subscribe/<str:short_name>/', views.subscribe, name='subscribe'),
 
     path('unsubscribe/<uuid:token>/', views.unsubscribe, name='unsubscribe'),
+
+    path('confirm-subscription/<int:subscription_id>/<uuid:token>/', views.confirm_subscription,
+            name='confirm_subscription'),
 
     path('ckeditor/', include('ckeditor_uploader.urls')),
 

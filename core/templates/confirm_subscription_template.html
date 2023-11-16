@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirm Your Subscription to {{ newsletter_title }}</title>
+    <style type="text/css">
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            background-color: #f8f8f8;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+        }
+        .content {
+            padding: 20px;
+            color: #333;
+        }
+        .footer {
+            background-color: #f8f8f8;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+        }
+        a {
+            color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            Confirm Your Subscription to {{ newsletter_title }}
+        </div>
+        <div class="content">
+            <p>Dear Subscriber,</p>
+            <p>Thank you for signing up for our newsletter! We're excited to have you on board.</p>
+            <p>To complete your subscription, please click on the following confirmation link:</p>
+            <p><a href="{{ confirmation_link }}">{{ confirmation_link }}</a></p>
+            <p>This step ensures that we have your correct email address and that you indeed wish to receive our newsletters.</p>
+            <p>If you did not subscribe to our newsletter, please feel free to ignore this email. No further action is required on your part.</p>
+            <p>Thank you and welcome!</p>
+
+            <p>Best regards,</p>
+            <p>{{ signature }}</p>
+        </div>
+        {% if footer_message %}
+        <div class="footer">
+<!--            &copy; 2023 Your Company Name. All rights reserved.-->
+            {{ footer_message }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

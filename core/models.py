@@ -15,6 +15,8 @@ class Newsletter(models.Model):
 
     privacy_policy = RichTextField(null=True, blank=True)
 
+    signature = RichTextField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -56,13 +58,22 @@ class SubscriptionToNewsletter(models.Model):
                                                   choices=BOOLEAN_CHOICES,
                                                   verbose_name="Do you accept the Privacy Policy?")
 
+    # this is used to confirm the subscription and is automatically generated
     subscribe_token = models.UUIDField(default=uuid.uuid4, unique=True)
 
     # this is used to unsubscribe and is automatically generated
     unsubscribe_token = models.UUIDField(default=uuid.uuid4, unique=True)
 
-    subscribed = models.BooleanField(default=True)
+    subscribed = models.BooleanField(default=True, verbose_name="is the user subscribed?")
     unsubscribed_at = models.DateTimeField(blank=True, null=True)
+
+    # if and when the verification email is sent
+    verification_email_sent = models.BooleanField(default=False)
+    verification_email_sent_at = models.DateTimeField(blank=True, null=True)
+
+    # if and when the subscription is confirmed (the user clicks on the link in the email)
+    subscription_confirmed = models.BooleanField(default=False)
+    subscription_confirmed_at = models.DateTimeField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
