@@ -19,8 +19,8 @@ class Command(BaseCommand):
 
         # Define the subject and the HTML content for the email
         subject = "Join Our Newsletter and Questionnaire"
-        html_content = render_to_string('email_template.html', {'context': 'values'})
-        text_content = strip_tags(html_content)  # Create a plain-text version of the HTML email
+        html_content = render_to_string('test_email_template.html', {'context': 'values'})
+        # text_content = strip_tags(html_content)  # Create a plain-text version of the HTML email
 
         # Create the email message
         email = EmailMessage(
