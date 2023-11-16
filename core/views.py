@@ -91,7 +91,17 @@ def survey_newsletter_subscription(request, short_name):
             subscription.newsletter = newsletter
             subscription.save()
             # You can add code here to send a confirmation email
-            return render(request, 'subscriptions/confirmation.html')
+
+            # create thread to send email
+            # send email
+            # send email to visitor
+
+
+            context = {
+                'newsletter_title': newsletter.name,
+            }
+
+            return render(request, 'subscriptions/confirmation.html', context=context)
         else:
             print("form is not valid")
 
@@ -106,6 +116,7 @@ def survey_newsletter_subscription(request, short_name):
         'form': form,
         'survey_form': survey_form,
         'short_name': 'BSBF Trieste 2024',
+        'privacy_policy': newsletter.privacy_policy,
     }
 
     return render(request, 'subscriptions/visit_survey_newsletter_subscription.html', context=context)

@@ -13,4 +13,4 @@ django-recaptcha
 django-ckeditor
 django-ckeditor-filebrowser-filer
 openpyxl
-
+celery[redis]
