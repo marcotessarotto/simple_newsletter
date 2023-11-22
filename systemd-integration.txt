@@ -1,0 +1,55 @@
+
+gunicorn-simple-newsletter.socket:
+
+[Unit]
+Description=gunicorn socket - simple newsletter
+
+[Socket]
+ListenStream=/run/gunicorn-simple-newsletter.sock
+
+[Install]
+WantedBy=sockets.target
+
+***
+
+gunicorn-simple-newsletter.service:
+
+[Unit]
+Description=gunicorn simple newsletter daemon
+Requires=gunicorn-simple-newsletter.socket
+After=network.target
+
+[Service]
+User=marcotessarotto
+Group=www-data
+WorkingDirectory=/home/marcotessarotto/git/simple_newsletter/
+ExecStart=/home/marcotessarotto/git/simple_newsletter/venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 2 \
+          --bind unix:/run/gunicorn-simple-newsletter.sock \
+          simple_newsletter.wsgi:application
+
+
+[Install]
+WantedBy=multi-user.target
+
+***
+
+celery.service:
+
+[Unit]
+Description=Celery Service
+After=network.target gunicorn-simple-newsletter.service
+
+[Service]
+Type=forking
+User=marcotessarotto
+Group=www-data
+WorkingDirectory=/home/marcotessarotto/git/simple_newsletter
+EnvironmentFile=/home/marcotessarotto/git/simple_newsletter/venv/bin/activate
+ExecStart=/home/marcotessarotto/git/simple_newsletter/venv/bin/celery -A simple_newsletter worker --loglevel=info
+ExecStop=/home/marcotessarotto/git/simple_newsletter/venv/bin/celery multi stopwait worker
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
