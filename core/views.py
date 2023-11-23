@@ -133,6 +133,8 @@ def survey_newsletter_subscription(request, short_name):
                 'newsletter_title': newsletter.name,
                 'signature': newsletter.signature,
                 'from_email': newsletter.from_email,
+                'subscription': subscription,
+                'ask_survey': True,
             }
 
             return render(request, 'subscriptions/confirmation.html', context=context)
@@ -147,10 +149,12 @@ def survey_newsletter_subscription(request, short_name):
         survey_form = VisitSurveyForm()
 
     context = {
+        'title': 'Survey and newsletter subscription',
         'form': form,
         'survey_form': survey_form,
         'short_name': 'BSBF Trieste 2024',
         'privacy_policy': newsletter.privacy_policy,
+        'ask_survey': True,
     }
 
     return render(request, 'subscriptions/visit_survey_newsletter_subscription.html', context=context)

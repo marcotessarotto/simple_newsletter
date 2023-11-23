@@ -4,12 +4,22 @@
 
 {% block content %}
 
+{% if ask_survey %}
+<br><br>
+<h1>Thank you for answering to the survey!</h1>
+
+{% endif %}
+
+<br><br><br>
+
+{% if subscription.privacy_policy_accepted %}
 <h1>Thank You for subscribing to {{ newsletter_title }}!</h1>
    <h2>We've sent a confirmation email to your inbox. <br>
    To complete your subscription, please <strong>click the confirmation link</strong> in the email.<br>
    <strong>This step is essential to ensure the validity of your email address.</strong></h2>
 <br>
 <h2>If you haven't received our confirmation email from {{ from_email }}, kindly check your spam folder or <a href="{{ from_email }}">contact us</a> for assistance.</h2>
+{% endif %}
 
 {% if signature %}
 <br><br>
