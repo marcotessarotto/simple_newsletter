@@ -123,3 +123,23 @@
     </form>
 
 {% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    $(document).ready(function() {
+
+
+    document.getElementById('id_subscribe_to_newsletter').addEventListener('change', function() {
+        var isSubscribed = this.value === 'True';
+        var fields = ['id_honorific', 'id_email', 'id_name', 'id_surname', 'id_nationality', 'id_company', 'id_role', 'id_telephone', 'id_privacy_policy_accepted'];
+        fields.forEach(function(fieldId) {
+            document.getElementById(fieldId).required = isSubscribed;
+        });
+    });
+
+
+
+    });
+</script>
+{% endblock %}
+```

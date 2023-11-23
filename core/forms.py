@@ -19,7 +19,7 @@ class SubscriptionForm(forms.ModelForm):
         required=False
     )
 
-    captcha = ReCaptchaField(label="Captcha verification",)
+    captcha = ReCaptchaField(label="reCAPTCHA security verification",)
 
     class Meta:
         model = SubscriptionToNewsletter
@@ -45,11 +45,34 @@ class SubscriptionForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        privacy_policy_accepted = cleaned_data.get("privacy_policy_accepted")
 
-        if not privacy_policy_accepted:
-            print("privacy_policy_accepted is not True")
-            raise ValidationError("Accepting the Privacy Policy is mandatory to complete the subscription process to the newsletter.")
+        subscribe_to_newsletter = cleaned_data.get("subscribe_to_newsletter")
+
+        # convert subscribe_to_newsletter to boolean
+        subscribe_to_newsletter = subscribe_to_newsletter == 'True'
+
+
+        if subscribe_to_newsletter:
+            privacy_policy_accepted = cleaned_data.get("privacy_policy_accepted")
+            email = cleaned_data.get("email")
+            name = cleaned_data.get("name")
+            surname = cleaned_data.get("surname")
+            nationality = cleaned_data.get("nationality")
+            company = cleaned_data.get("company")
+            role = cleaned_data.get("role")
+            telephone = cleaned_data.get("telephone")
+
+            if not privacy_policy_accepted:
+                print("privacy_policy_accepted is not True")
+                raise ValidationError("Accepting the Privacy Policy is mandatory to complete the subscription process to the newsletter.")
+
+            if not email or not name or not surname \
+                    or not nationality or not company or not role or not telephone:
+
+                raise ValidationError("Email, name, surname, nationality, company, role, telelephone are mandatory to complete the subscription process to the newsletter.")
+
+        else:
+            print("subscribe_to_newsletter is not True")
 
         return cleaned_data
 
@@ -59,35 +82,6 @@ class SubscriptionForm(forms.ModelForm):
         for field_name in self.fields:
             if field_name != 'subscribe_to_newsletter':
                 self.fields[field_name].required = initial_subscribe
-
-
-# class VisitSurveyForm(forms.ModelForm):
-#     class Meta:
-#         model = VisitSurvey
-#         fields = [
-#             'participated',
-#             'met_expectations',
-#             'aspects_made_impression',
-#             'suggestions_for_improvement',
-#             'interested_in_future_visits',
-#             'participate_in_bsbf',
-#         ]
-#         widgets = {
-#             'participated': forms.RadioSelect(choices=((False, 'No'), (True, 'Yes'))),
-#             'met_expectations': forms.RadioSelect(choices=((False, 'No'), (True, 'Yes'))),
-#             'aspects_made_impression': forms.Textarea(attrs={'rows': 4, 'cols': 40}),
-#             'suggestions_for_improvement': forms.Textarea(attrs={'rows': 4, 'cols': 40}),
-#             'interested_in_future_visits': forms.RadioSelect(choices=((False, 'No'), (True, 'Yes'))),
-#             'participate_in_bsbf': forms.RadioSelect(choices=((False, 'No'), (True, 'Yes'))),
-#         }
-#         labels = {
-#             'participated': "Did you participate in the BSBF visit?",
-#             'met_expectations': "Did it meet your expectations?",
-#             'aspects_made_impression': "What are the main aspects of the  BSBF visit relevant to you?",
-#             'suggestions_for_improvement': "What suggestions do you have to improve future BSBF visits to Big Science Organizations?",
-#             'interested_in_future_visits': "Are you interested in participating in next BSBF visits to CERN, ESA, ESO,  ESS, F4E or European XFEL, etc?",
-#             'participate_in_bsbf': "Will you participate in the next edition of BSBF in Trieste (IT),  1-4 October 2024?",
-#         }
 
 
 class VisitSurveyForm(forms.ModelForm):
