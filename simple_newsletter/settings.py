@@ -41,6 +41,8 @@ ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY')
 RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY')
 
+RECAPTCHA_REQUIRED_SCORE = 0.85
+
 MEDIA_ROOT = '/opt/media/simple_newsletter/'
 MEDIA_URL = '/media/'
 
@@ -67,7 +69,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'captcha',
+    'django_recaptcha',
     'core',
     'bootstrap5',
     'ckeditor',

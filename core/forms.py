@@ -1,5 +1,6 @@
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV3
 from django import forms
-from captcha.fields import ReCaptchaField
 from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 

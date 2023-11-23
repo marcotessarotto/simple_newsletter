@@ -2,9 +2,12 @@
 
 {% block title %}Survey and newsletter subscription{% endblock %}
 
+{% block content_title %}<h1>Survey and newsletter subscription</h1>
+{% endblock %}
+
 {% block content %}
 
-    <h1>Survey on BSBF visit F4E at ITER Organization</h1>
+    <h1>Anonymous survey on BSBF visit F4E at ITER Organization</h1>
 
 <!--    {% if form.errors %}-->
 <!--    <p style="color: red;">Please correct the errors below: (1)</p>-->
@@ -44,6 +47,18 @@
         {% endfor %}
 
 
+
+          <tr>
+                <td colspan="2" >
+                  <ul class="nav bg-info">
+                    <li class="nav-item">
+                    &nbsp;
+                    </li>
+
+                  </ul>
+                </td>
+          </tr>
+
           <tr>
               <td colspan="2">
 
@@ -76,6 +91,7 @@
             </td>
         </tr>
     {% endif %}
+
 
 
     {% for field in form %}
