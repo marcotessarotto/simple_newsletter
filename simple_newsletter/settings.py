@@ -47,6 +47,8 @@ RECAPTCHA_REQUIRED_SCORE = 0.85
 MEDIA_ROOT = '/opt/media/simple_newsletter/'
 MEDIA_URL = '/media/'
 
+BASE_URL = env('BASE_URL')
+
 CKEDITOR_UPLOAD_PATH = 'content/ckeditor/'
 
 # Celery settings

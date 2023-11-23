@@ -35,7 +35,7 @@ urlpatterns = [
 
     path('unsubscribe/<uuid:token>/', views.unsubscribe, name='unsubscribe'),
 
-    path('confirm-subscription/<int:subscription_id>/<uuid:token>/', views.confirm_subscription,
+    path('confirm-subscription/<uuid:token>/', views.confirm_subscription,
             name='confirm_subscription'),
 
     path('ckeditor/', include('ckeditor_uploader.urls')),

@@ -14,21 +14,20 @@ def proxy_django_auth(request):
     return HttpResponse(status=403)
 
 
-def confirm_subscription(request, subscription_id, token):
-    subscription: SubscriptionToNewsletter = get_object_or_404(SubscriptionToNewsletter, id=subscription_id,
-                                                               subscribe_token=token)
-
-    if subscription.subscription_confirmed:
-        return render(request, 'subscriptions/subscription_already_confirmed.html')
-
-    subscription.subscription_confirmed = True
-    subscription.subscription_confirmed_at = timezone.now()
-    subscription.save()
+def confirm_subscription(request, token):
+    subscription: SubscriptionToNewsletter = get_object_or_404(SubscriptionToNewsletter, subscribe_token=token)
 
     context = {
         'newsletter_title': subscription.newsletter.name,
         'signature': subscription.newsletter.signature,
     }
+
+    if subscription.subscription_confirmed:
+        return render(request, 'subscriptions/subscription_already_confirmed.html', context=context)
+
+    subscription.subscription_confirmed = True
+    subscription.subscription_confirmed_at = timezone.now()
+    subscription.save()
 
     return render(request, 'subscriptions/subscription_confirmed_by_user.html', context=context)
 

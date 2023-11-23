@@ -24,7 +24,7 @@ def process_subscription_task(subscription_id):
 
     context = {
         'newsletter_title': subscription.newsletter.name,
-        'confirmation_link': f"{settings.BASE_URL}/confirm-subscription/{subscription.id}/{subscription.subscribe_token}",
+        'confirmation_link': f"{settings.BASE_URL}/confirm-subscription/{subscription.subscribe_token}",
         'signature': subscription.newsletter.signature,
         'subscription': subscription,
     }

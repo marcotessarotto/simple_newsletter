@@ -14,3 +14,6 @@ RECAPTCHA_PRIVATE_KEY='your_secret_key'
 
 
 NOTIFICATION_BCC_RECIPIENTS = 'admin email(s), comma separated; or any other email you want to receive a copy of the email sent to the user'
+
+
+BASE_URL='http://localhost:8000'
