@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+
 import os
 import environ
 from pathlib import Path
@@ -58,6 +59,12 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
+
+if NOTIFICATION_BCC_RECIPIENTS := env('NOTIFICATION_BCC_RECIPIENTS'):
+    NOTIFICATION_BCC_RECIPIENTS = [email.strip() for email in NOTIFICATION_BCC_RECIPIENTS.split(',')]
+else:
+    NOTIFICATION_BCC_RECIPIENTS = None
 
 
 # Application definition

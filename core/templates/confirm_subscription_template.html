@@ -34,7 +34,7 @@
 <body>
     <div class="email-container">
         <div class="header">
-            Confirm Your Subscription to {{ newsletter_title }}
+            Confirm your subscription to {{ newsletter_title }}
         </div>
         <div class="content">
             <p>Dear Subscriber,</p>
@@ -46,7 +46,7 @@
             <p>Thank you and welcome!</p>
 
             <p>Best regards,</p>
-            <p>{{ signature }}</p>
+            <p>{{ signature|safe }}</p>
         </div>
         {% if footer_message %}
         <div class="footer">

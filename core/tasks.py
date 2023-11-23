@@ -2,9 +2,11 @@ from celery import shared_task
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.utils import timezone
 
 from core.logic_email import send_custom_email
 from core.models import SubscriptionToNewsletter
+from simple_newsletter.settings import NOTIFICATION_BCC_RECIPIENTS
 
 
 @shared_task
@@ -28,18 +30,16 @@ def process_subscription_task(subscription_id):
     }
 
     # Define the subject and the HTML content for the email
-    subject = f"Confirm Your Subscription to {subscription.newsletter.name}"
+    subject = f"Confirm your subscription to {subscription.newsletter.name}"
     html_content = render_to_string('confirm_subscription_template.html', context=context)
 
-    # subject = f"Confirm your subscription to our newsletter {subscription.newsletter.name}"
+    send_custom_email(subscription.newsletter.from_email,
+                      subscription.email,
+                      subject,
+                      html_content,
+                      bcc=NOTIFICATION_BCC_RECIPIENTS
+                      )
 
-
-    # we need to send a verification email
-
-    send_custom_email_task.delay(
-        newsletter.from_email,
-        subscription.email,
-        'Your Subject',
-        '<p>Your HTML content here</p>',
-        bcc=['bcc@example.com']
-    )
+    subscription.verification_email_sent = True
+    subscription.verification_email_sent_at = timezone.now()
+    subscription.save()
