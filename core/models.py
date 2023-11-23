@@ -138,7 +138,7 @@ class VisitSurvey(models.Model):
         "Are you interested in participating in future visits to big science organizations?", default=False)
     participate_in_bsbf = models.BooleanField("Will you participate in the BSBF 2024 in Trieste?", default=False)
 
-
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
