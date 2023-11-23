@@ -12,7 +12,7 @@ class SubscriptionForm(forms.ModelForm):
     BOOLEAN_CHOICES = [(False, 'No'), (True, 'Yes')]
 
     subscribe_to_newsletter = forms.ChoiceField(
-        label="Do you want to subscribe to the newsletter?",
+        label="Would you like to subscribe to the newsletter?",
         choices=BOOLEAN_CHOICES,
         widget=forms.Select,
         initial=False,
