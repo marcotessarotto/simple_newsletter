@@ -12,7 +12,7 @@ class SubscriptionForm(forms.ModelForm):
     BOOLEAN_CHOICES = [(False, 'No'), (True, 'Yes')]
 
     subscribe_to_newsletter = forms.ChoiceField(
-        label="Would you like to subscribe to the newsletter?",
+        label=mark_safe("Would you like to subscribe to <strong>BSBF Trieste 2024 newsletter</strong> in order to be updated on the next steps towards BSBF 2024 edition?"),
         choices=BOOLEAN_CHOICES,
         widget=forms.Select,
         initial=False,
@@ -37,7 +37,7 @@ class SubscriptionForm(forms.ModelForm):
             'ip_address': forms.HiddenInput()
         }
         labels = {
-            'privacy_policy_accepted': mark_safe("Please note that accepting the Privacy Policy is mandatory for completing the subscription process.<br>"
+            'privacy_policy_accepted': mark_safe("Please note that accepting the Privacy Policy is mandatory for subscribing to the BSBF newsletter.<br>"
                                                  "<strong>Do you accept the Privacy Policy?</strong>"),
 
             'subscription_to_newsletter': mark_safe("Would you like to subscribe to <strong>BSBF Trieste 2024 newsletter</strong> in order to be updated on the next steps towards BSBF 2024 edition?"),

@@ -80,7 +80,7 @@
     </tr>
 
     {% for field in form %}
-        {% if field.name != "subscribe_to_newsletter" %}
+        {% if field.name != "subscribe_to_newsletter" and field.name != "captcha" %}
         <tr>
             <th width="40%"> <label for="{{ field.id_for_label }}">{{ field.label|safe }}</label></th>
             <td width="60%">
@@ -108,6 +108,31 @@
 
               </td>
           </tr>
+
+          <tr>
+                <td colspan="2" >
+                  <ul class="nav bg-info">
+                    <li class="nav-item">
+                    &nbsp;
+                    </li>
+
+                  </ul>
+                </td>
+          </tr>
+
+        <tr>
+            <th width="40%"> <label for="{{ form.captcha.id_for_label }}">{{ form.captcha.label|safe }}</label></th>
+            <td width="60%">
+                {{ form.captcha }}
+                {% if form.captcha.errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.captcha.errors %}
+                            <h4>{{ error }}</h4>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </td>
+        </tr>
 
 
           <tr>
