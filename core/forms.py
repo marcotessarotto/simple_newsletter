@@ -9,7 +9,17 @@ from .models import VisitSurvey
 
 
 class SubscriptionForm(forms.ModelForm):
-    captcha = ReCaptchaField()
+    BOOLEAN_CHOICES = [(False, 'No'), (True, 'Yes')]
+
+    subscribe_to_newsletter = forms.ChoiceField(
+        label="Do you want to subscribe to the newsletter?",
+        choices=BOOLEAN_CHOICES,
+        widget=forms.Select,
+        initial=False,
+        required=False
+    )
+
+    captcha = ReCaptchaField(label="Captcha verification",)
 
     class Meta:
         model = SubscriptionToNewsletter
@@ -42,6 +52,13 @@ class SubscriptionForm(forms.ModelForm):
             raise ValidationError("Accepting the Privacy Policy is mandatory to complete the subscription process to the newsletter.")
 
         return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super(SubscriptionForm, self).__init__(*args, **kwargs)
+        initial_subscribe = self.initial.get('subscribe_to_newsletter', False)
+        for field_name in self.fields:
+            if field_name != 'subscribe_to_newsletter':
+                self.fields[field_name].required = initial_subscribe
 
 
 class VisitSurveyForm(forms.ModelForm):
