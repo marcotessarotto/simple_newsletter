@@ -104,12 +104,18 @@ def survey_newsletter_subscription(request, short_name):
 
         survey_form = VisitSurveyForm(request.POST)
 
+        survey = None
+
         if survey_form.is_valid():
             survey = survey_form.save(commit=False)
             survey.ip_address = get_client_ip(request)
-            survey.save()
+            # survey.save()
 
         if form.is_valid():
+
+            # save the survey only if the subscription is valid
+            if survey:
+                survey.save()
 
             subscription: SubscriptionToNewsletter = form.save(commit=False)
             subscription.ip_address = get_client_ip(request)
