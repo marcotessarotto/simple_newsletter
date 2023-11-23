@@ -47,12 +47,14 @@ class SubscriptionToNewsletterAdmin(admin.ModelAdmin, ExportExcelMixin):
     list_display = (
         'id',
         'get_newsletter_shortname',
+        'subscription_confirmed',
+        'verification_email_sent',
         # 'honorific',
-        'subscribed',
+        # 'subscribed',
         'email',
         'name',
         'surname',
-        'is_verified',
+        # 'is_verified',
         'created_at',
     )
 
