@@ -119,7 +119,12 @@ def survey_newsletter_subscription(request, short_name):
             subscription: SubscriptionToNewsletter = form.save(commit=False)
             subscription.ip_address = get_client_ip(request)
             subscription.newsletter = newsletter
-            subscription.save()
+
+            if subscription.privacy_policy_accepted == '':
+                subscription.privacy_policy_accepted = False
+
+            if subscription.privacy_policy_accepted:
+                subscription.save()
 
             # this step will send a confirmation email
             process_subscription_task.delay(subscription.id)
