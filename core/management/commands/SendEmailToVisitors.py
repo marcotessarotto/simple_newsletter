@@ -5,6 +5,7 @@ from core.business_logic import create_event_log
 from core.models import Visitor, EmailTemplate
 from core.template_utils import render_template_from_string
 from core.tasks import send_custom_email_task
+from simple_newsletter.settings import NOTIFICATION_BCC_RECIPIENTS
 
 
 class Command(BaseCommand):
@@ -40,7 +41,7 @@ class Command(BaseCommand):
                 visitor.email_address,
                 subject,
                 html_content,
-                # bcc=['']
+                bcc=NOTIFICATION_BCC_RECIPIENTS
             )
 
             visitor.email_sent = True
