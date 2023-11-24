@@ -15,12 +15,16 @@ def create_event_log(event_type, event_title, event_data, event_target=None):
     Returns:
     EventLog: The created EventLog instance.
     """
-    event_log = EventLog(
-        event_type=event_type,
-        event_title=event_title,
-        event_data=event_data,
-        event_target=event_target,
-        created_at=timezone.now()
-    )
-    event_log.save()
-    return event_log
+    try:
+        event_log = EventLog(
+            event_type=event_type,
+            event_title=event_title,
+            event_data=event_data,
+            event_target=event_target,
+            created_at=timezone.now()
+        )
+        event_log.save()
+        return event_log
+    except Exception as e:
+        print(e)
+        return None

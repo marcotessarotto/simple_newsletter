@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
+from .business_logic import create_event_log
 from .forms import SubscriptionForm, VisitSurveyForm
 from .models import Newsletter, SubscriptionToNewsletter, Visitor
 from .tasks import send_custom_email_task, process_subscription_task
@@ -28,6 +29,13 @@ def confirm_subscription(request, token):
     subscription.subscription_confirmed = True
     subscription.subscription_confirmed_at = timezone.now()
     subscription.save()
+
+    create_event_log(
+        event_type="SUBSCRIPTION_CONFIRMED",
+        event_title=f"Subscription confirmed by user",
+        event_data=f"Subscription: {subscription.id} - {subscription.email}",
+        event_target=subscription.email
+    )
 
     return render(request, 'subscriptions/subscription_confirmed_by_user.html', context=context)
 
