@@ -4,6 +4,7 @@ from django.utils import timezone
 from core.business_logic import create_event_log
 from core.models import Visitor, EmailTemplate
 from core.template_utils import render_template_from_string
+from core.tasks import send_custom_email_task
 
 
 class Command(BaseCommand):
@@ -15,7 +16,7 @@ class Command(BaseCommand):
         parser.add_argument("sender_email", type=str)
         parser.add_argument("--template", type=str, default=None)
 
-    def handle(self, send_custom_email_task=None, *args, **options):
+    def handle(self, *args, **options):
         sender_email = options["sender_email"]
         template = options.get("template")
 
