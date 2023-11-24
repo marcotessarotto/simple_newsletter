@@ -59,7 +59,7 @@ class SubscriptionToNewsletterAdmin(admin.ModelAdmin, ExportExcelMixin):
     )
 
     search_fields = ('id', 'email', 'name', 'surname',)
-    list_filter = ['is_verified', NewsletterShortNameFilter]
+    list_filter = [NewsletterShortNameFilter]
 
     actions = ["export_as_excel"]
 

@@ -64,7 +64,7 @@ class SubscriptionToNewsletter(models.Model):
 
     ip_address = models.GenericIPAddressField()
 
-    is_verified = models.BooleanField(default=False)
+    # is_verified = models.BooleanField(default=False)
 
     privacy_policy_accepted = models.BooleanField(blank=False,
                                                   choices=BOOLEAN_CHOICES,
