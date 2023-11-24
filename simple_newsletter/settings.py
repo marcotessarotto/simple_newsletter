@@ -50,6 +50,12 @@ MEDIA_URL = '/media/'
 BASE_URL = env('BASE_URL')
 
 CKEDITOR_UPLOAD_PATH = 'content/ckeditor/'
+CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_CONFIGS = {
+    'default': {
+        # ... any additional CKEditor options you want to include ...
+    },
+}
 
 # Celery settings
 CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Update this to your Redis broker URL

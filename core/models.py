@@ -103,6 +103,8 @@ class Message(models.Model):
     sent = models.BooleanField(default=False)
     sent_at = models.DateTimeField(blank=True, null=True)
 
+    to_be_sent_at = models.DateTimeField(blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
