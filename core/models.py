@@ -100,6 +100,8 @@ class Message(models.Model):
     content = RichTextField()
     content2 = RichTextUploadingField()
 
+    view_token = models.UUIDField(default=uuid.uuid4)
+
     sent = models.BooleanField(default=False)
     sent_at = models.DateTimeField(blank=True, null=True)
 

@@ -38,6 +38,8 @@ urlpatterns = [
     path('confirm-subscription/<uuid:token>/', views.confirm_subscription,
             name='confirm_subscription'),
 
+    path('view_message/<uuid:token>/', views.message_web_view, name='view_message'),
+
     path('ckeditor/', include('ckeditor_uploader.urls')),
 
     # used by nginx to verify authentication and access to media files.
