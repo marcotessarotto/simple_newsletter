@@ -178,3 +178,12 @@ class EventLog(models.Model):
 
     def __str__(self):
         return f"EventLog #{self.id}  event_type={self.event_type} event_target={self.event_target} event_title={self.event_title} {self.created_at}"
+
+
+class NewsletterDeliveryRecord(models.Model):
+    message = models.ForeignKey('Message', on_delete=models.CASCADE)
+    subscriber = models.ForeignKey('SubscriptionToNewsletter', on_delete=models.CASCADE)
+    sent_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Message {self.message.id} sent to {self.subscriber.email} on {self.sent_at}"

@@ -14,3 +14,4 @@ django-ckeditor
 django-ckeditor-filebrowser-filer
 openpyxl
 celery[redis]
+pytest

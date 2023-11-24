@@ -1,5 +1,6 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
-from .models import EventLog
+from .models import EventLog, SubscriptionToNewsletter, NewsletterDeliveryRecord
 
 
 def create_event_log(event_type, event_title, event_data, event_target=None):
@@ -28,3 +29,28 @@ def create_event_log(event_type, event_title, event_data, event_target=None):
     except Exception as e:
         print(e)
         return None
+
+
+def has_message_been_sent_to_subscriber(email, message_id):
+    """
+    Checks if a message has been sent to a subscriber with the given email.
+
+    Args:
+    email (str): The email address of the subscriber.
+    message_id (int): The ID of the message.
+
+    Returns:
+    bool: True if the message has been sent to the subscriber, False otherwise.
+    """
+    try:
+        # Find the subscriber by email
+        subscriber = SubscriptionToNewsletter.objects.get(email=email)
+
+        # Check if the message has been sent to this subscriber
+        return NewsletterDeliveryRecord.objects.filter(
+            subscriber=subscriber,
+            message_id=message_id
+        ).exists()
+    except ObjectDoesNotExist:
+        # Subscriber not found or other query issues
+        return False
