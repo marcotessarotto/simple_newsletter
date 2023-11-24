@@ -38,9 +38,8 @@ class Command(BaseCommand):
         print(f"message: {message_instance}")
 
         # get all subscribers:
-        # query all SubscriptionToNewsletter instances where newsletter=newsletter_instance and email is not null
-
-        rs = SubscriptionToNewsletter.objects.filter(newsletter=newsletter_instance).filter(email__isnull=False)
+        rs = SubscriptionToNewsletter.objects.filter(newsletter=newsletter_instance).filter(email__isnull=False) \
+            .filter(subscription_confirmed=True).filter(subscribed=True)
 
         print(f"Subscribers: {rs.count()}")
 
@@ -78,8 +77,3 @@ class Command(BaseCommand):
                 event_data=f"subscriber: {subscriber.email} - template: {template}",
                 event_target=subscriber.email
             )
-
-
-
-
-
