@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from core.models import Newsletter, SubscriptionToNewsletter, Message, Visitor, VisitSurvey, EventLog, EmailTemplate
+from core.models import Newsletter, SubscriptionToNewsletter, Message, Visitor, VisitSurvey, EventLog, EmailTemplate, NewsletterDeliveryRecord
 from simple_newsletter.admin_utils import ExportCsvMixin, ExportRawDataCsvMixin, ExportExcelMixin
 from django.utils.translation import gettext as _
 
@@ -47,6 +47,7 @@ class SubscriptionToNewsletterAdmin(admin.ModelAdmin, ExportExcelMixin):
     list_display = (
         'id',
         'get_newsletter_shortname',
+        'subscribed',
         'subscription_confirmed',
         'verification_email_sent',
         # 'honorific',
@@ -102,4 +103,10 @@ class EventLogAdmin(admin.ModelAdmin):
 @admin.register(EmailTemplate)
 class EmailTemplateAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'subject', 'created_at')
+    # list_filter = [ 'name']
+
+
+@admin.register(NewsletterDeliveryRecord)
+class NewsletterDeliveryRecordAdmin(admin.ModelAdmin):
+    list_display = ('id', 'message', 'subscriber', 'sent_at')
     # list_filter = [ 'name']

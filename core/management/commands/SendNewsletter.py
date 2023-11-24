@@ -1,11 +1,11 @@
 from django.core.management import BaseCommand
 
-from core.business_logic import has_message_been_sent_to_subscriber, create_event_log
+from core.business_logic import has_message_been_sent_to_subscriber, create_event_log, register_message_delivery
 from core.models import EmailTemplate, Newsletter, Message, SubscriptionToNewsletter
 from core.tasks import send_custom_email_task
 from core.template_utils import render_template_from_string
 from core.views import generate_unsubscribe_link, generate_message_web_view
-from simple_newsletter.settings import NOTIFICATION_BCC_RECIPIENTS
+from simple_newsletter.settings import NOTIFICATION_BCC_RECIPIENTS, BASE_URL
 
 
 class Command(BaseCommand):
@@ -57,11 +57,13 @@ class Command(BaseCommand):
             # each subscriber has a unique token
             context = {
                 "subscriber": subscriber,
-                "newsletter": newsletter_instance,
+                # "newsletter": newsletter_instance,
                 "message": message_instance,
                 # "token": subscriber.subscribe_token,
-                "unsubscribe_link": generate_unsubscribe_link(subscriber),
-                "web_version_view": generate_message_web_view(message_instance),
+                "subject": subject,
+                "content": message_instance.content,
+                "unsubscribe_link": BASE_URL + generate_unsubscribe_link(subscriber),
+                "web_version_view": BASE_URL + generate_message_web_view(message_instance),
             }
 
             html_content = render_template_from_string(template_content, context=context)
@@ -80,3 +82,5 @@ class Command(BaseCommand):
                 event_data=f"subscriber: {subscriber.email} - template: {template}",
                 event_target=subscriber.email
             )
+
+            register_message_delivery(message_instance.id, subscriber.id)

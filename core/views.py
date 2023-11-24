@@ -92,6 +92,9 @@ def message_web_view(request, token):
 def unsubscribe(request, token):
     subscriber = get_object_or_404(SubscriptionToNewsletter, unsubscribe_token=token)
 
+    if not subscriber.subscribed:
+        return HttpResponse("You have previosly unsubscribed from the newsletter.")
+
     if request.method != 'POST':
         return render(request, 'subscriptions/unsubscribe.html', {'subscriber': subscriber})
 
@@ -101,7 +104,7 @@ def unsubscribe(request, token):
     subscriber.save()
 
     # subscriber.delete()  # Or update a 'subscribed' field to False
-    return HttpResponse("You have successfully unsubscribed.")
+    return HttpResponse("You have successfully unsubscribed from the newsletter.")
 
 
 def get_client_ip(request):

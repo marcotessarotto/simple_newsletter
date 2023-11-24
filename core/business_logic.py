@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
-from .models import EventLog, SubscriptionToNewsletter, NewsletterDeliveryRecord
+from .models import EventLog, SubscriptionToNewsletter, NewsletterDeliveryRecord, Message
 
 
 def create_event_log(event_type, event_title, event_data, event_target=None):
@@ -54,3 +54,31 @@ def has_message_been_sent_to_subscriber(email, message_id):
     except ObjectDoesNotExist:
         # Subscriber not found or other query issues
         return False
+
+
+def register_message_delivery(message_id, subscriber_id):
+    """
+    Registers that a message has been sent to a subscriber.
+
+    Args:
+    message_id (int): The ID of the message.
+    subscriber_id (int): The ID of the subscriber.
+
+    Returns:
+    NewsletterDeliveryRecord: The created record of the message delivery.
+    """
+    # Retrieve the Message and SubscriptionToNewsletter instances
+    message = Message.objects.get(id=message_id)
+    subscriber = SubscriptionToNewsletter.objects.get(id=subscriber_id)
+
+    # Create a new NewsletterDeliveryRecord instance
+    delivery_record = NewsletterDeliveryRecord(
+        message=message,
+        subscriber=subscriber,
+        sent_at=timezone.now()
+    )
+
+    # Save the record to the database
+    delivery_record.save()
+
+    return delivery_record
