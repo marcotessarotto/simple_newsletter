@@ -50,7 +50,7 @@ class Command(BaseCommand):
             create_event_log(
                 event_type="EMAIL_SENT",
                 event_title=f"Email sent to visitor - subject: {subject}",
-                event_data=f"Visitor: {visitor.email_address}",
+                event_data=f"Visitor: {visitor.email_address} - template: {template}",
                 event_target=visitor.email_address
             )
 
