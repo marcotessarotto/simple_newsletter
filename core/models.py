@@ -3,6 +3,7 @@ import uuid
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
+from django.utils import timezone
 
 
 class EmailTemplate(models.Model):
@@ -94,6 +95,20 @@ class SubscriptionToNewsletter(models.Model):
 
     def __str__(self):
         return f"#{self.id} {self.newsletter.name} - {self.name} {self.surname} - {self.created_at}"
+
+    def unsubscribe(self):
+        self.subscribed = False
+        self.unsubscribed_at = timezone.now()
+        self.save()
+
+        from core.business_logic import create_event_log
+
+        create_event_log(
+            event_type="UNSUBSCRIBED",
+            event_title=f"User unsubscribed",
+            event_data=f"Subscription: {self.id} - {self.email}",
+            event_target=self.email
+        )
 
 
 class Message(models.Model):

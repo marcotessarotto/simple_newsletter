@@ -99,18 +99,23 @@ def unsubscribe(request, token):
     subscriber = get_object_or_404(SubscriptionToNewsletter, unsubscribe_token=token)
 
     if not subscriber.subscribed:
-        return HttpResponse("You have previosly unsubscribed from the newsletter.")
+        return render(request, 'subscriptions/unsubscribe_previously.html', {'subscriber': subscriber})
 
     if request.method != 'POST':
         return render(request, 'subscriptions/unsubscribe.html', {'subscriber': subscriber})
 
     # Handle the unsubscription process, e.g., mark the subscriber as unsubscribed
-    subscriber.subscribed = False
-    subscriber.unsubscribed_at = timezone.now()
-    subscriber.save()
+    subscriber.unsubscribe()
 
-    # subscriber.delete()  # Or update a 'subscribed' field to False
-    return HttpResponse("You have successfully unsubscribed from the newsletter.")
+    # since at the moment multiple subscriptions with the same email are allowed to the same newsletter,
+    # we do a query to check if there are other subscriptions with the same email
+    rs = SubscriptionToNewsletter.objects.filter(email=subscriber.email).filter(subscribed=True).filter(newsletter=subscriber.newsletter)
+
+    for s in rs:
+        print(f"unsubscribe - {s.id} {s.email} {s.subscribed} {s.newsletter.short_name}")
+        s.unsubscribe()
+
+    return render(request, 'subscriptions/unsubscribe_successful.html', {'subscriber': subscriber})
 
 
 def get_client_ip(request):
