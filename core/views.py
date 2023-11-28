@@ -84,7 +84,13 @@ def message_web_view(request, token):
 
     context = {
         'message': message,
+        'newsletter_title': message.newsletter.name,
+        'subject': message.subject,
+        'content': message.message_content,
+        'newsletter_signature': message.newsletter.signature,
     }
+
+    message.increment_web_view_counter()
 
     return render(request, 'subscriptions/message_web_view.html', context=context)
 

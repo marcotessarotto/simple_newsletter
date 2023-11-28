@@ -1,4 +1,5 @@
 from django.core.management import BaseCommand
+from django.utils import timezone
 
 from core.business_logic import has_message_been_sent_to_subscriber, create_event_log, register_message_delivery
 from core.models import EmailTemplate, Newsletter, Message, SubscriptionToNewsletter
@@ -92,3 +93,8 @@ class Command(BaseCommand):
 
             if not nosave:
                 register_message_delivery(message_instance.id, subscriber.id)
+
+        if not nosave:
+            message_instance.processed = True
+            message_instance.processed_at = timezone.now()
+            message_instance.save()

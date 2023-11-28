@@ -74,11 +74,15 @@ class MessageAdmin(admin.ModelAdmin, ExportCsvMixin, ExportRawDataCsvMixin):
 
     list_display = ('id',
                     'get_newsletter_shortname',
-                    'subject', 'sent', 'sent_at',
+                    'subject',
+                    'processed',
+                    'processed_at',
+                    'to_be_processed_at',
+                    'web_view_counter',
                     'created_at',
                     )
     search_fields = ('id', 'subject', 'content',)
-    # list_filter = ['enabled', 'allows_subscription', ]
+    list_filter = ['processed', 'newsletter__short_name', ]
     actions = ["export_as_csv", "export_raw_data_as_csv"]
 
 

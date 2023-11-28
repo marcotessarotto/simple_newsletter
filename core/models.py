@@ -102,10 +102,10 @@ class Message(models.Model):
 
     view_token = models.UUIDField(default=uuid.uuid4)
 
-    sent = models.BooleanField(default=False)
-    sent_at = models.DateTimeField(blank=True, null=True)
+    processed = models.BooleanField(default=False)
+    processed_at = models.DateTimeField(blank=True, null=True)
 
-    to_be_sent_at = models.DateTimeField(blank=True, null=True)
+    to_be_processed_at = models.DateTimeField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -114,6 +114,10 @@ class Message(models.Model):
 
     def __str__(self):
         return self.subject
+
+    def increment_web_view_counter(self):
+        self.web_view_counter += 1
+        self.save()
 
 
 class Visitor(models.Model):
