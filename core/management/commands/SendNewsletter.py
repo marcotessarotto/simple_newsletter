@@ -20,6 +20,7 @@ class Command(BaseCommand):
 
         # add an option called "--nosave" to avoid saving the results to the database
         parser.add_argument("--nosave", action="store_true", default=False, help="Do not save the results to the database")
+        parser.add_argument("--nosend", action="store_true", default=False, help="Do not send the emails")
 
     def handle(self, *args, **options):
 
@@ -28,6 +29,7 @@ class Command(BaseCommand):
         message = options.get("message")  # message instance id
 
         nosave = options.get("nosave")  # do not save the results to the database
+        nosend = options.get("nosend")  # do not send the emails
 
         # print(newsletter)
         # print(template)
@@ -61,6 +63,8 @@ class Command(BaseCommand):
 
         print(f"Subscribers: {rs.count()}")
 
+        counter = 0
+
         # for each subscriber, send an email with a link to the questionnaire
         for subscriber in rs:
             # print(subscriber.email)
@@ -86,25 +90,32 @@ class Command(BaseCommand):
 
             sender_address = f"{newsletter_instance.name} <{newsletter_instance.from_email}>" if newsletter_instance.name else newsletter_instance.from_email
 
-            send_custom_email_task.delay(
-                sender_address,
-                subscriber.email,
-                message_instance.subject,
-                html_content,
-                bcc=NOTIFICATION_BCC_RECIPIENTS
-            )
+            if not nosend:
+                send_custom_email_task.delay(
+                    sender_address,
+                    subscriber.email,
+                    message_instance.subject,
+                    html_content,
+                    bcc=NOTIFICATION_BCC_RECIPIENTS
+                )
 
-            create_event_log(
-                event_type="EMAIL_SENT",
-                event_title=f"Newsletter email sent to subscriber - message id: {message_instance.id} -  subject: {message_instance.subject}",
-                event_data=f"subscriber: {subscriber.email} - template: {template_instance}",
-                event_target=subscriber.email
-            )
+                create_event_log(
+                    event_type="EMAIL_SENT",
+                    event_title=f"Newsletter email sent to subscriber - message id: {message_instance.id} -  subject: {message_instance.subject}",
+                    event_data=f"subscriber: {subscriber.email} - template: {template_instance}",
+                    event_target=subscriber.email
+                )
 
-            print(f"Message sent to {subscriber.email}")
+                print(f"Message sent to {subscriber.email}")
 
             if not nosave:
                 register_message_delivery(message_instance.id, subscriber.id)
+
+            counter += 1
+            if counter >= 1:
+                break
+
+        print(f"Sent {counter} messages")
 
         if not nosave:
             message_instance.processed = True
