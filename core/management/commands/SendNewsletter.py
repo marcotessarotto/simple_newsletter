@@ -65,6 +65,9 @@ class Command(BaseCommand):
 
         counter = 0
 
+        sender_address = f"{newsletter_instance.name} <{newsletter_instance.from_email}>" if newsletter_instance.name else newsletter_instance.from_email
+        # check if the sender address is valid
+
         # for each subscriber, send an email with a link to the questionnaire
         for subscriber in rs:
             # print(subscriber.email)
@@ -87,8 +90,6 @@ class Command(BaseCommand):
             }
 
             html_content = render_template_from_string(template_content, context=context)
-
-            sender_address = f"{newsletter_instance.name} <{newsletter_instance.from_email}>" if newsletter_instance.name else newsletter_instance.from_email
 
             if not nosend:
                 send_custom_email_task.delay(
