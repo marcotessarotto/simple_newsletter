@@ -14,7 +14,7 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser):
-        parser.add_argument("--newsletter", type=str, default=None, required=True, help="Newsletter short name")
+        # parser.add_argument("--newsletter", type=str, default=None, required=True, help="Newsletter short name")
         # parser.add_argument("--template", type=str, default=None, required=True, help="Template name")
         parser.add_argument("--message", type=int, default=None, required=True, help="Message instance id")
 
@@ -33,18 +33,29 @@ class Command(BaseCommand):
         # print(template)
         # print(message)
 
-        newsletter_instance = Newsletter.objects.get(short_name=newsletter)
-
-        # instance = EmailTemplate.objects.get(name=template)
-        instance = newsletter_instance.template
-        template_content = instance.body
-
         message_instance = Message.objects.get(id=message)
 
-        print(f"newsletter: {newsletter_instance}")
-        print(f"message: {message_instance}")
+        newsletter_instance = message_instance.newsletter
+        if not newsletter_instance:
+            print("Error: no newsletter instance found")
+            return
 
-        # get all subscribers:
+        # newsletter_instance = Newsletter.objects.get(short_name=newsletter)
+
+        # instance = EmailTemplate.objects.get(name=template)
+        template_instance = newsletter_instance.template
+
+        if not template_instance:
+            print("Error: no template instance found")
+            return
+
+        template_content = template_instance.body
+
+        print(f"message: {message_instance}")
+        print(f"newsletter: {newsletter_instance}")
+        print(f"template: {template_instance}")
+
+        # get all subscribers of the newsletter that have confirmed their subscription:
         rs = SubscriptionToNewsletter.objects.filter(newsletter=newsletter_instance).filter(email__isnull=False) \
             .filter(subscription_confirmed=True).filter(subscribed=True)
 
@@ -55,7 +66,7 @@ class Command(BaseCommand):
             # print(subscriber.email)
 
             if has_message_been_sent_to_subscriber(subscriber.email, message_instance.id):
-                print(f"Message already sent to {subscriber.email}")
+                print(f"Message already sent to {subscriber.email}, skipping")
                 continue
             else:
                 print(f"Message not yet sent to {subscriber.email}")
@@ -86,7 +97,7 @@ class Command(BaseCommand):
             create_event_log(
                 event_type="EMAIL_SENT",
                 event_title=f"Newsletter email sent to subscriber - message id: {message_instance.id} -  subject: {message_instance.subject}",
-                event_data=f"subscriber: {subscriber.email} - template: {newsletter_instance.template}",
+                event_data=f"subscriber: {subscriber.email} - template: {template_instance}",
                 event_target=subscriber.email
             )
 
