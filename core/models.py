@@ -96,8 +96,8 @@ class SubscriptionToNewsletter(models.Model):
 
 class Message(models.Model):
     newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE)
-    subject = models.CharField(max_length=255)
-    # content = RichTextField()
+    subject = models.CharField(max_length=255, verbose_name="email subject")
+
     message_content = RichTextUploadingField()
 
     view_token = models.UUIDField(default=uuid.uuid4)
@@ -109,6 +109,8 @@ class Message(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    web_view_counter = models.IntegerField(default=0)
 
     def __str__(self):
         return self.subject
