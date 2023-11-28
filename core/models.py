@@ -112,6 +112,13 @@ class SubscriptionToNewsletter(models.Model):
             event_target=self.email
         )
 
+    def can_send_email(self):
+        """
+        Can we send email to this subscriber?
+        Returns True if the user has subscribed and confirmed the subscription, False otherwise.
+        """
+        return self.subscribed and self.subscription_confirmed
+
 
 class Message(models.Model):
     newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE)
