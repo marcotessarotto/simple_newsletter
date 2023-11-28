@@ -61,7 +61,7 @@ class Command(BaseCommand):
                 "message": message_instance,
                 # "token": subscriber.subscribe_token,
                 "subject": subject,
-                "content": message_instance.content,
+                "content": message_instance.message_content,
                 "unsubscribe_link": BASE_URL + generate_unsubscribe_link(subscriber),
                 "web_version_view": BASE_URL + generate_message_web_view(message_instance),
             }

@@ -97,8 +97,8 @@ class SubscriptionToNewsletter(models.Model):
 class Message(models.Model):
     newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE)
     subject = models.CharField(max_length=255)
-    content = RichTextField()
-    content2 = RichTextUploadingField()
+    # content = RichTextField()
+    message_content = RichTextUploadingField()
 
     view_token = models.UUIDField(default=uuid.uuid4)
 

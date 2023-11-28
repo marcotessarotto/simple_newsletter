@@ -74,7 +74,7 @@ class MessageAdmin(admin.ModelAdmin, ExportCsvMixin, ExportRawDataCsvMixin):
 
     list_display = ('id',
                     'get_newsletter_shortname',
-                    'subject', 'content', 'sent', 'sent_at',
+                    'subject', 'sent', 'sent_at',
                     'created_at',
                     )
     search_fields = ('id', 'subject', 'content',)

@@ -11,7 +11,7 @@ def send_message(msg: Message):
         # Construct the email
         email = EmailMessage(
             subject=msg.subject,
-            body=msg.content2,  # Using content2 (RichTextUploadingField) as it may contain images
+            body=msg.message_content,  # Using content2 (RichTextUploadingField) as it may contain images
             from_email=settings.EMAIL_HOST_USER,
             to=[msg.newsletter.from_email],  # Assuming the newsletter model has a from_email attribute to send to
         )
