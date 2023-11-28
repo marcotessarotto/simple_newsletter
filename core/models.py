@@ -29,6 +29,8 @@ class Newsletter(models.Model):
 
     signature = RichTextField(null=True, blank=True)
 
+    template = models.ForeignKey(EmailTemplate, on_delete=models.PROTECT, null=True, blank=True, related_name="newsletter_template", verbose_name="Template for the newsletter")
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

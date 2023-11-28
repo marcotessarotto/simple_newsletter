@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("--newsletter", type=str, default=None, required=True, help="Newsletter short name")
-        parser.add_argument("--template", type=str, default=None, required=True, help="Template name")
+        # parser.add_argument("--template", type=str, default=None, required=True, help="Template name")
         parser.add_argument("--message", type=int, default=None, required=True, help="Message instance id")
 
         # add an option called "--nosave" to avoid saving the results to the database
@@ -24,7 +24,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         newsletter = options.get("newsletter")  # newsletter short name
-        template = options.get("template")  # template name
+        # template = options.get("template")  # template name
         message = options.get("message")  # message instance id
 
         nosave = options.get("nosave")  # do not save the results to the database
@@ -33,10 +33,11 @@ class Command(BaseCommand):
         # print(template)
         # print(message)
 
-        instance = EmailTemplate.objects.get(name=template)
-        template_content = instance.body
-
         newsletter_instance = Newsletter.objects.get(short_name=newsletter)
+
+        # instance = EmailTemplate.objects.get(name=template)
+        instance = newsletter_instance.template
+        template_content = instance.body
 
         message_instance = Message.objects.get(id=message)
 
@@ -85,7 +86,7 @@ class Command(BaseCommand):
             create_event_log(
                 event_type="EMAIL_SENT",
                 event_title=f"Newsletter email sent to subscriber - message id: {message_instance.id} -  subject: {message_instance.subject}",
-                event_data=f"subscriber: {subscriber.email} - template: {template}",
+                event_data=f"subscriber: {subscriber.email} - template: {newsletter_instance.template}",
                 event_target=subscriber.email
             )
 
