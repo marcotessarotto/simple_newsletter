@@ -41,6 +41,8 @@ class Newsletter(models.Model):
 
 class SubscriptionToNewsletter(models.Model):
     newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE)
+    # newsletter is used to create sending address (see SendNewsletter command),
+    # so some characters are not allowed (i.e. '[`, ']' )
 
     BOOLEAN_CHOICES = [(False, 'No'), (True, 'Yes')]
 
