@@ -105,7 +105,7 @@ class Command(BaseCommand):
 
                 create_event_log(
                     event_type="EMAIL_SENT",
-                    event_title=f"Newsletter email sent to subscriber - message id: {message_instance.id} -  subject: {message_instance.subject}",
+                    event_title=f"Newsletter email sent to subscriber - newsletter {newsletter_instance.short_name} message id: {message_instance.id} -  subject: {message_instance.subject}",
                     event_data=f"subscriber: {subscriber.email} - template: {template_instance}",
                     event_target=subscriber.email
                 )
