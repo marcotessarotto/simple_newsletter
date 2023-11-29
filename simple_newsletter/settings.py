@@ -44,7 +44,7 @@ RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY')
 
 RECAPTCHA_REQUIRED_SCORE = 0.85
 
-MEDIA_ROOT = '/opt/media/simple_newsletter/'
+MEDIA_ROOT = '/opt/media/simple_newsletter/media/'
 MEDIA_URL = '/media/'
 
 BASE_URL = env('BASE_URL')
