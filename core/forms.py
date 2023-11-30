@@ -63,7 +63,7 @@ class SubscriptionForm(forms.ModelForm):
             telephone = cleaned_data.get("telephone")
 
             if not privacy_policy_accepted:
-                print("privacy_policy_accepted is not True")
+                print("form: privacy_policy_accepted is not True")
                 raise ValidationError("Accepting the Privacy Policy is mandatory to complete the subscription process to the newsletter.")
 
             if not email or not name or not surname \
@@ -72,7 +72,7 @@ class SubscriptionForm(forms.ModelForm):
                 raise ValidationError("Email, name, surname, nationality, company, role, telelephone are mandatory to complete the subscription process to the newsletter.")
 
         else:
-            print("subscribe_to_newsletter is not True")
+            print("form: subscribe_to_newsletter is not True")
 
         return cleaned_data
 

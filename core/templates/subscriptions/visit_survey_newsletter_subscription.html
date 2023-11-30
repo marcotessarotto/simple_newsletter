@@ -14,7 +14,7 @@
 
       <table width="200%" class="table">
 
-          {% if ask_survey %}
+        {% if survey_form %}
 
           <tr>
                 <td colspan="2" >
@@ -22,14 +22,12 @@
                 </td>
           </tr>
 
-        {% for field in survey_form %}
+          {% for field in survey_form %}
           <tr>
             <th width="40%">{{ field.label_tag }}</th>
             <td width="60%">{{ field }}</td>
           </tr>
-        {% endfor %}
-
-          {% endif %}
+          {% endfor %}
 
 
           <tr>
@@ -42,6 +40,8 @@
                   </ul>
                 </td>
           </tr>
+
+        {% endif %}
 
           <tr>
               <td colspan="2">
@@ -59,14 +59,25 @@
 
                 {% for field, errors in form.errors.items %}
                     {% for error in errors %}
+                        {% if field == 'captcha' %}
                         <div class="alert alert-danger">
-                            {% if field == 'captcha' %}
-                                <!-- Custom handling for captcha errors -->
-                                <h4>Captcha Error: {{ error }}</h4>
-                            {% else %}
-                                <h4>{{ error }}</h4>
-                            {% endif %}
+                            <!-- Custom handling for captcha errors -->
+                            <h4>Captcha Error: {{ error }}</h4>
                         </div>
+                        {% else %}
+                            {% if error != 'This field is required.' %}
+                            <div class="alert alert-danger">
+                                {% if field == 'captcha' %}
+                                    <!-- Custom handling for captcha errors -->
+                                    <h4>Captcha Error: {{ error }}</h4>
+                                {% elif error == 'This field is required.' %}
+                                    <h4>{{ field|title }} is required.</h4>
+                                {% else %}
+                                    <h4>{{ error }}</h4>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        {% endif %}
                     {% endfor %}
                 {% endfor %}
             </td>
@@ -105,8 +116,6 @@
         </tr>
         {% endif %}
     {% endfor %}
-
-
 
           <tr>
               <th style="font-size: 24px">Privacy policy</th>

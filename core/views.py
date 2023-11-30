@@ -129,8 +129,26 @@ def survey_newsletter_subscription(request, short_name):
             if subscription.privacy_policy_accepted == '':
                 subscription.privacy_policy_accepted = False
 
-            if subscription.privacy_policy_accepted:
-                subscription.save()
+            # form['subscribe_to_newsletter'].value() returns a string
+            subscribed_to_newsletter = form['subscribe_to_newsletter'].value().lower() == 'true'
+
+            print(f"subscribed_to_newsletter: {subscribed_to_newsletter}")
+            print(f"subscription.privacy_policy_accepted: {subscription.privacy_policy_accepted}")
+            print(type(subscribed_to_newsletter))
+            print(type(subscription.privacy_policy_accepted))
+
+            # subscribe_to_newsletter: True, privacy_policy_accepted: True => ok, subscribe to newsnetter
+            # subscribe_to_newsletter: True, privacy_policy_accepted: False => error
+            # subscribe_to_newsletter: False, privacy_policy_accepted: True => ok
+            # subscribe_to_newsletter: False, privacy_policy_accepted: False => ok
+
+            if subscribed_to_newsletter and not subscription.privacy_policy_accepted:
+                # should not pass here
+                print("error: subscription to newsletter requested but privacy policy not accepted")
+            else:
+                if subscribed_to_newsletter and subscription.privacy_policy_accepted:
+                    print("save subscription to newsletter")
+                    subscription.save()
 
                 # this step will send a confirmation email
                 process_subscription_task.delay(subscription.id)
@@ -141,11 +159,11 @@ def survey_newsletter_subscription(request, short_name):
                     'from_email': newsletter.from_email,
                     'subscription': subscription,
                     'ask_survey': True,
+                    'subscribed_to_newsletter': subscribed_to_newsletter,
                 }
 
                 return render(request, 'subscriptions/confirmation.html', context=context)
-            else:
-                print("privacy policy not accepted")
+
         else:
             print("form is not valid")
 
@@ -176,23 +194,9 @@ def subscribe_to_newsletter(request, short_name):
     #####################
 
     if request.method == 'POST':
-        form = SubscriptionForm(request.POST)
-
-        survey_form = VisitSurveyForm(request.POST)
-
-        survey = None
-
-        if survey_form.is_valid():
-            survey = survey_form.save(commit=False)
-            survey.ip_address = get_client_ip(request)
-            # survey.save()
+        form = SubscriptionForm(request.POST, all_fields_required=True)
 
         if form.is_valid():
-
-            # save the survey only if the subscription is valid
-            if survey:
-                survey.save()
-
             subscription: SubscriptionToNewsletter = form.save(commit=False)
             subscription.ip_address = get_client_ip(request)
             subscription.newsletter = newsletter
@@ -221,45 +225,43 @@ def subscribe_to_newsletter(request, short_name):
             print("form is not valid")
 
     else:
-        form = SubscriptionForm(all_fields_required=False)
-
-        survey_form = VisitSurveyForm()
+        form = SubscriptionForm(all_fields_required=True)
 
     context = {
-        'title': 'Survey and newsletter subscription',
+        'title': 'Newsletter subscription',
         'form': form,
-        'survey_form': survey_form,
         'short_name': newsletter.name,
-        'survey_title': newsletter.survey_title,
         'privacy_policy': newsletter.privacy_policy,
-        'ask_survey': True,
+        'ask_survey': False,
     }
+
+    return render(request, 'subscriptions/visit_survey_newsletter_subscription.html', context=context)
     #####################
 
 
 
-    if request.method == 'POST':
-        form = SubscriptionForm(request.POST, all_fields_required=True)
-
-        print(form)
-        if form.is_valid():
-            subscription = form.save(commit=False)
-            subscription.ip_address = get_client_ip(request)
-            subscription.newsletter = newsletter
-            subscription.save()
-            # You can add code here to send a confirmation email
-            return render(request, 'subscriptions/confirmation.html')
-        else:
-            print("form is not valid")
-
-    else:
-        form = SubscriptionForm(all_fields_required=True)
-
-    context = {
-        'short_name': short_name,
-        'form': SubscriptionForm(initial={'newsletter': newsletter}),
-
-    }
-
-    return render(request, 'subscriptions/subscribe.html', context=context)
+    # if request.method == 'POST':
+    #     form = SubscriptionForm(request.POST, all_fields_required=True)
+    #
+    #     print(form)
+    #     if form.is_valid():
+    #         subscription = form.save(commit=False)
+    #         subscription.ip_address = get_client_ip(request)
+    #         subscription.newsletter = newsletter
+    #         subscription.save()
+    #         # You can add code here to send a confirmation email
+    #         return render(request, 'subscriptions/confirmation.html')
+    #     else:
+    #         print("form is not valid")
+    #
+    # else:
+    #     form = SubscriptionForm(all_fields_required=True)
+    #
+    # context = {
+    #     'short_name': short_name,
+    #     'form': SubscriptionForm(initial={'newsletter': newsletter}),
+    #
+    # }
+    #
+    # return render(request, 'subscriptions/subscribe.html', context=context)
 
