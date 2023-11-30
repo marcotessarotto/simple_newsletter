@@ -77,11 +77,18 @@ class SubscriptionForm(forms.ModelForm):
         return cleaned_data
 
     def __init__(self, *args, **kwargs):
+        # read value and remove all_fields_required from kwargs
+        all_fields_required = kwargs.pop('all_fields_required', False)
+
+        print(f"all_fields_required: {all_fields_required}")
+
         super(SubscriptionForm, self).__init__(*args, **kwargs)
         initial_subscribe = self.initial.get('subscribe_to_newsletter', False)
-        for field_name in self.fields:
-            if field_name != 'subscribe_to_newsletter':
-                self.fields[field_name].required = initial_subscribe
+
+        if not all_fields_required:
+            for field_name in self.fields:
+                if field_name != 'subscribe_to_newsletter':
+                    self.fields[field_name].required = initial_subscribe
 
 
 class VisitSurveyForm(forms.ModelForm):

@@ -22,6 +22,10 @@ def process_subscription_task(subscription_id):
         # email already sent, do nothing
         return
 
+    newsletter_instance = subscription.newsletter
+
+    sender_address = f"{newsletter_instance.name} <{newsletter_instance.from_email}>" if newsletter_instance.name else newsletter_instance.from_email
+
     context = {
         'newsletter_title': subscription.newsletter.name,
         'confirmation_link': f"{settings.BASE_URL}/confirm-subscription/{subscription.subscribe_token}",
@@ -33,7 +37,7 @@ def process_subscription_task(subscription_id):
     subject = f"Confirm your subscription to {subscription.newsletter.name}"
     html_content = render_to_string('confirm_subscription_template.html', context=context)
 
-    send_custom_email(subscription.newsletter.from_email,
+    send_custom_email(sender_address,
                       subscription.email,
                       subject,
                       html_content,

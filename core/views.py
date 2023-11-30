@@ -41,35 +41,6 @@ def confirm_subscription(request, token):
     return render(request, 'subscriptions/subscription_confirmed_by_user.html', context=context)
 
 
-def subscribe(request, short_name):
-    newsletter: Newsletter = get_object_or_404(Newsletter, short_name=short_name)
-
-    if not newsletter.allows_subscription:
-        return render(request, 'subscriptions/newsletter_subscription_closed.html')
-
-    if request.method == 'POST':
-        form = SubscriptionForm(request.POST)
-
-        print(form)
-        if form.is_valid():
-            subscription = form.save(commit=False)
-            subscription.ip_address = get_client_ip(request)
-            subscription.newsletter = newsletter
-            subscription.save()
-            # You can add code here to send a confirmation email
-            return render(request, 'subscriptions/confirmation.html')
-        else:
-            print("form is not valid")
-
-    context = {
-        'short_name': short_name,
-        'form': SubscriptionForm(initial={'newsletter': newsletter}),
-
-    }
-
-    return render(request, 'subscriptions/subscribe.html', context=context)
-
-
 def generate_unsubscribe_link(subscriber):
     # Use Django's reverse to create the URL for the unsubscribe view
     return reverse('unsubscribe', args=[str(subscriber.unsubscribe_token)])
@@ -161,25 +132,25 @@ def survey_newsletter_subscription(request, short_name):
             if subscription.privacy_policy_accepted:
                 subscription.save()
 
-            # this step will send a confirmation email
-            process_subscription_task.delay(subscription.id)
+                # this step will send a confirmation email
+                process_subscription_task.delay(subscription.id)
 
-            context = {
-                'newsletter_title': newsletter.name,
-                'signature': newsletter.signature,
-                'from_email': newsletter.from_email,
-                'subscription': subscription,
-                'ask_survey': True,
-            }
+                context = {
+                    'newsletter_title': newsletter.name,
+                    'signature': newsletter.signature,
+                    'from_email': newsletter.from_email,
+                    'subscription': subscription,
+                    'ask_survey': True,
+                }
 
-            return render(request, 'subscriptions/confirmation.html', context=context)
+                return render(request, 'subscriptions/confirmation.html', context=context)
+            else:
+                print("privacy policy not accepted")
         else:
             print("form is not valid")
 
-
-
     else:
-        form = SubscriptionForm()
+        form = SubscriptionForm(all_fields_required=False)
 
         survey_form = VisitSurveyForm()
 
@@ -187,7 +158,8 @@ def survey_newsletter_subscription(request, short_name):
         'title': 'Survey and newsletter subscription',
         'form': form,
         'survey_form': survey_form,
-        'short_name': 'BSBF Trieste 2024',
+        'short_name': newsletter.name,
+        'survey_title': newsletter.survey_title,
         'privacy_policy': newsletter.privacy_policy,
         'ask_survey': True,
     }
@@ -195,5 +167,34 @@ def survey_newsletter_subscription(request, short_name):
     return render(request, 'subscriptions/visit_survey_newsletter_subscription.html', context=context)
 
 
+def subscribe_to_newsletter(request, short_name):
+    newsletter: Newsletter = get_object_or_404(Newsletter, short_name=short_name)
 
+    if not newsletter.allows_subscription:
+        return render(request, 'subscriptions/newsletter_subscription_closed.html')
+
+    if request.method == 'POST':
+        form = SubscriptionForm(request.POST, all_fields_required=True)
+
+        print(form)
+        if form.is_valid():
+            subscription = form.save(commit=False)
+            subscription.ip_address = get_client_ip(request)
+            subscription.newsletter = newsletter
+            subscription.save()
+            # You can add code here to send a confirmation email
+            return render(request, 'subscriptions/confirmation.html')
+        else:
+            print("form is not valid")
+
+    else:
+        form = SubscriptionForm(all_fields_required=True)
+
+    context = {
+        'short_name': short_name,
+        'form': SubscriptionForm(initial={'newsletter': newsletter}),
+
+    }
+
+    return render(request, 'subscriptions/subscribe.html', context=context)
 

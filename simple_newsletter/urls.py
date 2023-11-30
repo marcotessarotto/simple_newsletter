@@ -31,7 +31,7 @@ urlpatterns = [
     # path('visit_survey_newsletter_subscription/<uuid:token>/', views.visit_survey_newsletter_subscription,
     #      name='visit_survey_newsletter_subscription'),
 
-    path('subscribe/<str:short_name>/', views.subscribe, name='subscribe'),
+    path('subscribe/<str:short_name>/', views.subscribe_to_newsletter, name='subscribe'),
 
     path('unsubscribe/<uuid:token>/', views.unsubscribe, name='unsubscribe'),
 

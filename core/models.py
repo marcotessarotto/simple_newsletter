@@ -21,6 +21,7 @@ class EmailTemplate(models.Model):
 class Newsletter(models.Model):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
+    survey_title = models.CharField(max_length=255)
     description = models.TextField()
     from_email = models.EmailField()
     enabled = models.BooleanField(default=False)
