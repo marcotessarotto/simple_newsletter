@@ -173,6 +173,71 @@ def subscribe_to_newsletter(request, short_name):
     if not newsletter.allows_subscription:
         return render(request, 'subscriptions/newsletter_subscription_closed.html')
 
+    #####################
+
+    if request.method == 'POST':
+        form = SubscriptionForm(request.POST)
+
+        survey_form = VisitSurveyForm(request.POST)
+
+        survey = None
+
+        if survey_form.is_valid():
+            survey = survey_form.save(commit=False)
+            survey.ip_address = get_client_ip(request)
+            # survey.save()
+
+        if form.is_valid():
+
+            # save the survey only if the subscription is valid
+            if survey:
+                survey.save()
+
+            subscription: SubscriptionToNewsletter = form.save(commit=False)
+            subscription.ip_address = get_client_ip(request)
+            subscription.newsletter = newsletter
+
+            if subscription.privacy_policy_accepted == '':
+                subscription.privacy_policy_accepted = False
+
+            if subscription.privacy_policy_accepted:
+                subscription.save()
+
+                # this step will send a confirmation email
+                process_subscription_task.delay(subscription.id)
+
+                context = {
+                    'newsletter_title': newsletter.name,
+                    'signature': newsletter.signature,
+                    'from_email': newsletter.from_email,
+                    'subscription': subscription,
+                    'ask_survey': True,
+                }
+
+                return render(request, 'subscriptions/confirmation.html', context=context)
+            else:
+                print("privacy policy not accepted")
+        else:
+            print("form is not valid")
+
+    else:
+        form = SubscriptionForm(all_fields_required=False)
+
+        survey_form = VisitSurveyForm()
+
+    context = {
+        'title': 'Survey and newsletter subscription',
+        'form': form,
+        'survey_form': survey_form,
+        'short_name': newsletter.name,
+        'survey_title': newsletter.survey_title,
+        'privacy_policy': newsletter.privacy_policy,
+        'ask_survey': True,
+    }
+    #####################
+
+
+
     if request.method == 'POST':
         form = SubscriptionForm(request.POST, all_fields_required=True)
 
