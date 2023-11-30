@@ -2,6 +2,7 @@ from django.core.management import BaseCommand
 from django.utils import timezone
 
 from core.business_logic import has_message_been_sent_to_subscriber, create_event_log, register_message_delivery
+from core.html_utils import make_urls_absolute
 from core.models import EmailTemplate, Newsletter, Message, SubscriptionToNewsletter
 from core.tasks import send_custom_email_task
 from core.template_utils import render_template_from_string
@@ -93,6 +94,8 @@ class Command(BaseCommand):
             }
 
             html_content = render_template_from_string(template_content, context=context)
+
+            html_content = make_urls_absolute(html_content, newsletter_instance.base_url)
 
             if not nosend:
                 send_custom_email_task.delay(

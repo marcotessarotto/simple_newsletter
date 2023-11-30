@@ -22,6 +22,9 @@ class Newsletter(models.Model):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
     survey_title = models.CharField(max_length=255)
+
+    base_url = models.CharField(max_length=255, default="https://www.replace-this-with-your-domain.com/")
+
     description = models.TextField()
     from_email = models.EmailField()
     enabled = models.BooleanField(default=False)
