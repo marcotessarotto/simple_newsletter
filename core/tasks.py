@@ -4,6 +4,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import timezone
 
+from core.business_logic import create_event_log
 from core.logic_email import send_custom_email
 from core.models import SubscriptionToNewsletter
 from simple_newsletter.settings import NOTIFICATION_BCC_RECIPIENTS
@@ -53,3 +54,11 @@ def process_subscription_task(subscription_id):
     subscription.verification_email_sent = True
     subscription.verification_email_sent_at = timezone.now()
     subscription.save()
+
+    create_event_log(
+        event_type="CONFIRM_SUBSCRIPTION_EMAIL_SENT",
+        event_title=f"Confirm subscription email sent to subscriber - newsletter {newsletter_instance.short_name}"
+                    f" - subject: {subject}",
+        event_data=f"subscriber: {subscription.email}",
+        event_target=subscription.email
+    )
