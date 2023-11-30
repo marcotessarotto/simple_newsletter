@@ -132,11 +132,6 @@ def survey_newsletter_subscription(request, short_name):
             # form['subscribe_to_newsletter'].value() returns a string
             subscribed_to_newsletter = form['subscribe_to_newsletter'].value().lower() == 'true'
 
-            print(f"subscribed_to_newsletter: {subscribed_to_newsletter}")
-            print(f"subscription.privacy_policy_accepted: {subscription.privacy_policy_accepted}")
-            print(type(subscribed_to_newsletter))
-            print(type(subscription.privacy_policy_accepted))
-
             # subscribe_to_newsletter: True, privacy_policy_accepted: True => ok, subscribe to newsnetter
             # subscribe_to_newsletter: True, privacy_policy_accepted: False => error
             # subscribe_to_newsletter: False, privacy_policy_accepted: True => ok
