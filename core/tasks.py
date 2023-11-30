@@ -18,8 +18,14 @@ def send_custom_email_task(sender_email, recipient_email, subject, html_content,
 def process_subscription_task(subscription_id):
     subscription: SubscriptionToNewsletter = SubscriptionToNewsletter.objects.get(id=subscription_id)
 
+    if not subscription.privacy_policy_accepted:
+        # privacy policy not accepted, do nothing
+        print("privacy policy not accepted, do nothing")
+        return
+
     if subscription.verification_email_sent:
         # email already sent, do nothing
+        print("verification email already sent, do nothing")
         return
 
     newsletter_instance = subscription.newsletter

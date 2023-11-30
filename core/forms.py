@@ -51,7 +51,6 @@ class SubscriptionForm(forms.ModelForm):
         # convert subscribe_to_newsletter to boolean
         subscribe_to_newsletter = subscribe_to_newsletter == 'True'
 
-
         if subscribe_to_newsletter:
             privacy_policy_accepted = cleaned_data.get("privacy_policy_accepted")
             email = cleaned_data.get("email")
@@ -74,11 +73,15 @@ class SubscriptionForm(forms.ModelForm):
         else:
             print("form: subscribe_to_newsletter is not True")
 
+            if self.check_newsletter_subscription:
+                raise ValidationError("You must choose 'Yes' to subscription, to complete the subscription process to the newsletter.")
+
         return cleaned_data
 
     def __init__(self, *args, **kwargs):
         # read value and remove all_fields_required from kwargs
         all_fields_required = kwargs.pop('all_fields_required', False)
+        self.check_newsletter_subscription = kwargs.pop('check_newsletter_subscription', False)
 
         print(f"all_fields_required: {all_fields_required}")
 

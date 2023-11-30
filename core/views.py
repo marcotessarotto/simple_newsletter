@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -145,8 +146,8 @@ def survey_newsletter_subscription(request, short_name):
                     print("save subscription to newsletter")
                     subscription.save()
 
-                # this step will send a confirmation email
-                process_subscription_task.delay(subscription.id)
+                    # this step will send a confirmation email
+                    process_subscription_task.delay(subscription.id)
 
                 context = {
                     'newsletter_title': newsletter.name,
@@ -189,7 +190,7 @@ def subscribe_to_newsletter(request, short_name):
     #####################
 
     if request.method == 'POST':
-        form = SubscriptionForm(request.POST, all_fields_required=True)
+        form = SubscriptionForm(request.POST, all_fields_required=True, check_newsletter_subscription=True)
 
         if form.is_valid():
             subscription: SubscriptionToNewsletter = form.save(commit=False)
@@ -199,7 +200,13 @@ def subscribe_to_newsletter(request, short_name):
             if subscription.privacy_policy_accepted == '':
                 subscription.privacy_policy_accepted = False
 
-            if subscription.privacy_policy_accepted:
+            # form['subscribe_to_newsletter'].value() returns a string
+            subscribed_to_newsletter = form['subscribe_to_newsletter'].value().lower() == 'true'
+
+            if not subscribed_to_newsletter and subscription.privacy_policy_accepted:
+                raise ValidationError("You should choose 'Yes' to subscribe to the newsletter.")
+
+            if subscription.privacy_policy_accepted and subscribed_to_newsletter:
                 subscription.save()
 
                 # this step will send a confirmation email
@@ -210,7 +217,8 @@ def subscribe_to_newsletter(request, short_name):
                     'signature': newsletter.signature,
                     'from_email': newsletter.from_email,
                     'subscription': subscription,
-                    'ask_survey': True,
+                    'ask_survey': False,
+                    'subscribed_to_newsletter': subscribed_to_newsletter,
                 }
 
                 return render(request, 'subscriptions/confirmation.html', context=context)
