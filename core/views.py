@@ -199,8 +199,6 @@ def subscribe_to_newsletter(request, short_name):
     if not newsletter.allows_subscription:
         return render(request, 'subscriptions/newsletter_subscription_closed.html')
 
-    #####################
-
     if request.method == 'POST':
         form = SubscriptionForm(request.POST, all_fields_required=True, check_newsletter_subscription=True)
 

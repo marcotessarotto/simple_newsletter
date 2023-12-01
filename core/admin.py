@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from core.models import Newsletter, SubscriptionToNewsletter, Message, Visitor, VisitSurvey, EventLog, EmailTemplate, NewsletterDeliveryRecord
+from core.models import Newsletter, SubscriptionToNewsletter, Message, Visitor, VisitSurvey, EventLog, EmailTemplate, \
+    NewsletterDeliveryRecord, EmailSettings
 from simple_newsletter.admin_utils import ExportCsvMixin, ExportRawDataCsvMixin, ExportExcelMixin
 from django.utils.translation import gettext as _
 
@@ -115,3 +116,15 @@ class EmailTemplateAdmin(admin.ModelAdmin):
 class NewsletterDeliveryRecordAdmin(admin.ModelAdmin):
     list_display = ('id', 'message', 'subscriber', 'sent_at')
     # list_filter = [ 'name']
+
+
+@admin.register(EmailSettings)
+class EmailSettingsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'host', 'port', 'use_tls', 'username',)
+                    # 'email_host', 'email_port', 'email_host_user', 'email_host_password',
+                    # 'email_use_tls', 'email_use_ssl', 'email_timeout',
+                    # 'email_ssl_keyfile', 'email_ssl_certfile', 'email_ssl_password',
+                    # 'email_from', 'email_to', 'email_bcc',
+                    # 'email_reply_to',
+                    # 'email_subject_prefix',
+                    # 'email_use_localtime', 'email_log_level', 'email_log_file', 'email_log_format', )

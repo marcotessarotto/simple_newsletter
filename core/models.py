@@ -18,6 +18,18 @@ class EmailTemplate(models.Model):
         return self.name
 
 
+class EmailSettings(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    host = models.CharField(max_length=255)
+    port = models.IntegerField(default=587)  # typical values: 587, 465, 25
+    use_tls = models.BooleanField(default=True)
+    username = models.CharField(max_length=255, blank=True, null=True)
+    password = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"EmailSettings for {self.host}"
+
+
 class Newsletter(models.Model):
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=255)
