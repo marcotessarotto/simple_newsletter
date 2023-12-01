@@ -16,3 +16,4 @@ openpyxl
 celery[redis]
 pytest
 email_validator
+pandas
