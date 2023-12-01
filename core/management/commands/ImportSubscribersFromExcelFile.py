@@ -28,11 +28,16 @@ class Command(BaseCommand):
             # Iterate over the rows of the DataFrame
             for index, row in df.iterrows():
 
+                subscription_to_newsletter = row['subscription_to_newsletter']
+
+                if not subscription_to_newsletter:
+                    print(f"subscription_to_newsletter is False, skipping...")
+                    continue
+
                 # check if the email address is already in the database
                 if SubscriptionToNewsletter.objects.filter(email=row['email']).exists():
                     print(f"Email {row['email']} already exists in the database, skipping...")
                     continue
-
 
                 subscription = SubscriptionToNewsletter(
                     newsletter=newsletter_instance,
