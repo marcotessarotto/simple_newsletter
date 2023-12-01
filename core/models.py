@@ -107,7 +107,7 @@ class SubscriptionToNewsletter(models.Model):
     def __str__(self):
         return f"#{self.id} {self.newsletter.name} - {self.name} {self.surname} - {self.created_at}"
 
-    def unsubscribe(self):
+    def unsubscribe(self, additional_notes=None):
         self.subscribed = False
         self.unsubscribed_at = timezone.now()
         self.save()
@@ -117,7 +117,7 @@ class SubscriptionToNewsletter(models.Model):
         create_event_log(
             event_type="UNSUBSCRIBED",
             event_title=f"User unsubscribed from newsletter {self.newsletter.short_name} - {self.newsletter.name}",
-            event_data=f"Subscription: {self.id} - {self.email}",
+            event_data=f"Subscription: {self.id} - {self.email} additional_notes: {additional_notes}",
             event_target=self.email
         )
 

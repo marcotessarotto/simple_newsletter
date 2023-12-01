@@ -6,6 +6,7 @@ from django.urls import reverse
 
 from .business_logic import create_event_log
 from .forms import SubscriptionForm, VisitSurveyForm
+from .html_utils import make_urls_absolute
 from .models import Newsletter, SubscriptionToNewsletter, Visitor, Message
 from .tasks import send_custom_email_task, process_subscription_task
 
@@ -52,7 +53,10 @@ def generate_message_web_view(message):
 
 
 def message_web_view(request, token):
+    """This view is used to view the message in the browser, without opening the email client."""
     message = get_object_or_404(Message, view_token=token)
+
+    message_content = make_urls_absolute(message.message_content, message.newsletter.base_url)
 
     context = {
         'message': message,
@@ -76,8 +80,15 @@ def unsubscribe(request, token):
     if request.method != 'POST':
         return render(request, 'subscriptions/unsubscribe.html', {'subscriber': subscriber})
 
+    # get browser user agent
+    user_agent = request.META.get('HTTP_USER_AGENT') if request.META else "unknown"
+
+    # get request ip address
+    ip_address = get_client_ip(request)
+    msg = f"unsubscribed web view - ip address: {ip_address} - user_agent: '{user_agent}'"
+
     # Handle the unsubscription process, e.g., mark the subscriber as unsubscribed
-    subscriber.unsubscribe()
+    subscriber.unsubscribe(additional_notes=msg)
 
     # since at the moment multiple subscriptions with the same email are allowed to the same newsletter,
     # we do a query to check if there are other subscriptions with the same email
@@ -85,7 +96,7 @@ def unsubscribe(request, token):
 
     for s in rs:
         print(f"unsubscribe - {s.id} {s.email} {s.subscribed} {s.newsletter.short_name}")
-        s.unsubscribe()
+        s.unsubscribe(additional_notes=msg)
 
     return render(request, 'subscriptions/unsubscribe_successful.html', {'subscriber': subscriber})
 
@@ -208,6 +219,7 @@ def subscribe_to_newsletter(request, short_name):
                 raise ValidationError("You should choose 'Yes' to subscribe to the newsletter.")
 
             if subscription.privacy_policy_accepted and subscribed_to_newsletter:
+                subscription.subscription_source = "web form"
                 subscription.save()
 
                 # this step will send a confirmation email
