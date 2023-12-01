@@ -31,7 +31,7 @@ class Command(BaseCommand):
                 subscription_to_newsletter = row['subscription_to_newsletter']
 
                 if not subscription_to_newsletter:
-                    print(f"subscription_to_newsletter is False, skipping...")
+                    print(f"subscription_to_newsletter is False, skipping... email: {row['email']}")
                     continue
 
                 # check if the email address is already in the database
