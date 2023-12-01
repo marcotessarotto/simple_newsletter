@@ -26,6 +26,18 @@ class EmailSettings(models.Model):
     username = models.CharField(max_length=255, blank=True, null=True)
     password = models.CharField(max_length=255, blank=True, null=True)
 
+    def to_dict(self):
+        """
+        Returns a dictionary representation of the model instance.
+        """
+        return {
+            'host': self.host,
+            'port': self.port,
+            'use_tls': self.use_tls,
+            'username': self.username,
+            'password': self.password
+        }
+
     def __str__(self):
         return f"EmailSettings for {self.host}"
 
@@ -46,7 +58,9 @@ class Newsletter(models.Model):
 
     signature = RichTextField(null=True, blank=True)
 
-    template = models.ForeignKey(EmailTemplate, on_delete=models.PROTECT, null=True, blank=True, related_name="newsletter_template", verbose_name="Template for the newsletter")
+    template = models.ForeignKey(EmailTemplate, on_delete=models.PROTECT, null=True, blank=True, related_name="newsletter_template", verbose_name="Template to use to send the email newsletter")
+
+    email_settings = models.ForeignKey(EmailSettings, on_delete=models.PROTECT, null=True, blank=True, related_name="newsletter_email_settings", verbose_name="Email settings to use to send the email newsletter")
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

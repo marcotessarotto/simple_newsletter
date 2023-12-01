@@ -11,8 +11,8 @@ from simple_newsletter.settings import NOTIFICATION_BCC_RECIPIENTS
 
 
 @shared_task
-def send_custom_email_task(sender_email, recipient_email, subject, html_content, bcc=None):
-    return send_custom_email(sender_email, recipient_email, subject, html_content, bcc)
+def send_custom_email_task(sender_email, recipient_email, subject, html_content, bcc=None, email_settings_id=None):
+    return send_custom_email(sender_email, recipient_email, subject, html_content, bcc, email_settings_id)
 
 
 @shared_task
@@ -48,7 +48,8 @@ def process_subscription_task(subscription_id):
                       subscription.email,
                       subject,
                       html_content,
-                      bcc=NOTIFICATION_BCC_RECIPIENTS
+                      bcc=NOTIFICATION_BCC_RECIPIENTS,
+                      email_settings_id=newsletter_instance.email_settings.id if newsletter_instance.email_settings else None
                       )
 
     subscription.verification_email_sent = True

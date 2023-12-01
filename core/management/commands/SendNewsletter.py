@@ -21,7 +21,7 @@ class Command(BaseCommand):
 
         # add an option called "--nosave" to avoid saving the results to the database
         parser.add_argument("--nosave", action="store_true", default=False, help="Do not save the results to the database")
-        parser.add_argument("--nosend", action="store_true", default=False, help="Do not send the emails")
+        parser.add_argument("--oksend", action="store_true", default=True, help="send the emails (if true), do not send email if false")
 
     def handle(self, *args, **options):
 
@@ -30,7 +30,7 @@ class Command(BaseCommand):
         message = options.get("message")  # message instance id
 
         nosave = options.get("nosave")  # do not save the results to the database
-        nosend = options.get("nosend")  # do not send the emails
+        oksend = options.get("oksend")  # do not send the emails
 
         # print(newsletter)
         # print(template)
@@ -97,13 +97,14 @@ class Command(BaseCommand):
 
             html_content = make_urls_absolute(html_content, newsletter_instance.base_url)
 
-            if not nosend:
+            if oksend:
                 send_custom_email_task.delay(
                     sender_address,
                     subscriber.email,
                     message_instance.subject,
                     html_content,
-                    bcc=NOTIFICATION_BCC_RECIPIENTS
+                    bcc=NOTIFICATION_BCC_RECIPIENTS,
+                    email_settings_id=newsletter_instance.email_settings.id if newsletter_instance.email_settings else None
                 )
 
                 create_event_log(
