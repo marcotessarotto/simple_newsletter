@@ -51,7 +51,9 @@ class Newsletter(models.Model):
 
     description = models.TextField()
     from_email = models.EmailField()
+    # if enabled, the newsletter will be sent to all subscribers; if disabled, the newsletter will not be sent
     enabled = models.BooleanField(default=False)
+    # allow users to subscribe to this newsletter through the website
     allows_subscription = models.BooleanField(default=True)
 
     privacy_policy = RichTextField(null=True, blank=True)

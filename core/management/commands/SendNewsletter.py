@@ -43,6 +43,10 @@ class Command(BaseCommand):
             print("Error: no newsletter instance found")
             return
 
+        if not newsletter_instance.enabled:
+            print("Error: newsletter is not enabled to send messages")
+            return
+
         # newsletter_instance = Newsletter.objects.get(short_name=newsletter)
 
         # instance = EmailTemplate.objects.get(name=template)
