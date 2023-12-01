@@ -252,32 +252,5 @@ def subscribe_to_newsletter(request, short_name):
     }
 
     return render(request, 'subscriptions/visit_survey_newsletter_subscription.html', context=context)
-    #####################
 
-
-
-    # if request.method == 'POST':
-    #     form = SubscriptionForm(request.POST, all_fields_required=True)
-    #
-    #     print(form)
-    #     if form.is_valid():
-    #         subscription = form.save(commit=False)
-    #         subscription.ip_address = get_client_ip(request)
-    #         subscription.newsletter = newsletter
-    #         subscription.save()
-    #         # You can add code here to send a confirmation email
-    #         return render(request, 'subscriptions/confirmation.html')
-    #     else:
-    #         print("form is not valid")
-    #
-    # else:
-    #     form = SubscriptionForm(all_fields_required=True)
-    #
-    # context = {
-    #     'short_name': short_name,
-    #     'form': SubscriptionForm(initial={'newsletter': newsletter}),
-    #
-    # }
-    #
-    # return render(request, 'subscriptions/subscribe.html', context=context)
 
