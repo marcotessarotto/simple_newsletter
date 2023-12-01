@@ -35,7 +35,7 @@ def confirm_subscription(request, token):
 
     create_event_log(
         event_type="SUBSCRIPTION_CONFIRMED",
-        event_title=f"Subscription confirmed by user",
+        event_title=f"Subscription confirmed by user - newsletter {subscription.newsletter.short_name}",
         event_data=f"Subscription: {subscription.id} - {subscription.email}",
         event_target=subscription.email
     )
@@ -72,7 +72,7 @@ def message_web_view(request, token):
 
 
 def unsubscribe(request, token):
-    subscriber = get_object_or_404(SubscriptionToNewsletter, unsubscribe_token=token)
+    subscriber: SubscriptionToNewsletter = get_object_or_404(SubscriptionToNewsletter, unsubscribe_token=token)
 
     if not subscriber.subscribed:
         return render(request, 'subscriptions/unsubscribe_previously.html', {'subscriber': subscriber})
