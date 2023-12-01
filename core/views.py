@@ -62,7 +62,7 @@ def message_web_view(request, token):
         'message': message,
         'newsletter_title': message.newsletter.name,
         'subject': message.subject,
-        'content': message.message_content,
+        'content': message_content,
         'newsletter_signature': message.newsletter.signature,
     }
 
