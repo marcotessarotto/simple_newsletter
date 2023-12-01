@@ -15,3 +15,4 @@ django-ckeditor-filebrowser-filer
 openpyxl
 celery[redis]
 pytest
+email_validator

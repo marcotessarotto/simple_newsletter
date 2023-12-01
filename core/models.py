@@ -44,6 +44,8 @@ class Newsletter(models.Model):
 
 
 class SubscriptionToNewsletter(models.Model):
+    """A subscription by a user to a newsletter."""
+
     newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE)
     # newsletter is used to create sending address (see SendNewsletter command),
     # so some characters are not allowed (i.e. '[`, ']' )
@@ -73,7 +75,9 @@ class SubscriptionToNewsletter(models.Model):
 
     ip_address = models.GenericIPAddressField()
 
-    # is_verified = models.BooleanField(default=False)
+    notes = models.TextField(blank=True, null=True, verbose_name="Notes for the administrator")
+
+    subscription_source = models.CharField(max_length=200, verbose_name='Subscription source', blank=True, null=True, default="visit")
 
     privacy_policy_accepted = models.BooleanField(blank=False,
                                                   choices=BOOLEAN_CHOICES,
@@ -85,6 +89,7 @@ class SubscriptionToNewsletter(models.Model):
     # this is used to unsubscribe and is automatically generated
     unsubscribe_token = models.UUIDField(default=uuid.uuid4, unique=True)
 
+    # if subscribed is False, the user has unsubscribed; see also can_send_email() below
     subscribed = models.BooleanField(default=True, verbose_name="is the user subscribed?")
     unsubscribed_at = models.DateTimeField(blank=True, null=True)
 
@@ -92,7 +97,7 @@ class SubscriptionToNewsletter(models.Model):
     verification_email_sent = models.BooleanField(default=False)
     verification_email_sent_at = models.DateTimeField(blank=True, null=True)
 
-    # if and when the subscription is confirmed (the user clicks on the link in the email)
+    # if and when the subscription is confirmed (the user clicks on the link in the verification email)
     subscription_confirmed = models.BooleanField(default=False)
     subscription_confirmed_at = models.DateTimeField(blank=True, null=True)
 
@@ -111,7 +116,7 @@ class SubscriptionToNewsletter(models.Model):
 
         create_event_log(
             event_type="UNSUBSCRIBED",
-            event_title=f"User unsubscribed",
+            event_title=f"User unsubscribed from newsletter {self.newsletter.short_name} - {self.newsletter.name}",
             event_data=f"Subscription: {self.id} - {self.email}",
             event_target=self.email
         )
@@ -119,7 +124,7 @@ class SubscriptionToNewsletter(models.Model):
     def can_send_email(self):
         """
         Can we send email to this subscriber?
-        Returns True if the user has subscribed and confirmed the subscription, False otherwise.
+        Returns True if the user has subscribed to newsletter and confirmed the subscription, False otherwise.
         """
         return self.subscribed and self.subscription_confirmed
 

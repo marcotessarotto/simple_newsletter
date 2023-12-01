@@ -50,6 +50,7 @@ class SubscriptionToNewsletterAdmin(admin.ModelAdmin, ExportExcelMixin):
         'subscription_confirmed',
         'subscribed',
         'verification_email_sent',
+        'subscription_source',
         # 'honorific',
         # 'subscribed',
         'email',

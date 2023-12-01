@@ -144,6 +144,7 @@ def survey_newsletter_subscription(request, short_name):
             else:
                 if subscribed_to_newsletter and subscription.privacy_policy_accepted:
                     print("save subscription to newsletter")
+                    subscription.subscription_source = "visit survey"
                     subscription.save()
 
                     # this step will send a confirmation email
