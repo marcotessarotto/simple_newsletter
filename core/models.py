@@ -64,6 +64,8 @@ class Newsletter(models.Model):
 
     email_settings = models.ForeignKey(EmailSettings, on_delete=models.PROTECT, null=True, blank=True, related_name="newsletter_email_settings", verbose_name="Email settings to use to send the email newsletter")
 
+    template_for_web_view = models.ForeignKey(EmailTemplate, on_delete=models.PROTECT, null=True, blank=True, related_name="newsletter_template_for_web_view", verbose_name="Template to use to display the email newsletter in the browser")
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

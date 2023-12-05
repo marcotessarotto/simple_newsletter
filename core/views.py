@@ -9,6 +9,7 @@ from .forms import SubscriptionForm, VisitSurveyForm
 from .html_utils import make_urls_absolute
 from .models import Newsletter, SubscriptionToNewsletter, Visitor, Message
 from .tasks import send_custom_email_task, process_subscription_task
+from .template_utils import render_template_from_string
 
 
 def proxy_django_auth(request):
@@ -58,6 +59,8 @@ def message_web_view(request, token):
 
     message_content = make_urls_absolute(message.message_content, message.newsletter.base_url)
 
+    message.increment_web_view_counter()
+
     context = {
         'message': message,
         'newsletter_title': message.newsletter.name,
@@ -66,7 +69,15 @@ def message_web_view(request, token):
         'newsletter_signature': message.newsletter.signature,
     }
 
-    message.increment_web_view_counter()
+    template_for_web_view = message.newsletter.template_for_web_view
+
+    if template_for_web_view:
+        template_content = template_for_web_view.body
+        html_content = render_template_from_string(template_content, context=context)
+
+        return HttpResponse(html_content)
+    else:
+        print("no template for web view")
 
     return render(request, 'subscriptions/message_web_view.html', context=context)
 
