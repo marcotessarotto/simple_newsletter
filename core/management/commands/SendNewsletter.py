@@ -30,7 +30,7 @@ class Command(BaseCommand):
         message = options.get("message")  # message instance id
 
         nosave = options.get("nosave")  # do not save the results to the database
-        oksend = options.get("oksend")  # do not send the emails
+        oksend = options.get("oksend")  # ok to send the emails
 
         # print(newsletter)
         # print(template)
