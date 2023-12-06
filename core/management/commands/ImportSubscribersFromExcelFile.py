@@ -9,7 +9,8 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('filename', type=str, help='The filename of the Excel file to import')
-        parser.add_argument('newsletter_id', type=int, help='The ID of the Newsletter instance to associate with the subscribers')
+        parser.add_argument('newsletter_id', type=int,
+                            help='The ID of the Newsletter instance to associate with the subscribers')
 
     def handle(self, *args, **options):
         filename = options['filename']
@@ -49,12 +50,12 @@ class Command(BaseCommand):
                     newsletter=newsletter_instance,
                     honorific=honorific if honorific in dict(SubscriptionToNewsletter.HONORIFICS) else "",
                     email=row['email'],
-                    name=row['name'],
-                    surname=row['surname'],
+                    name=row.get('name', ''),
+                    surname=row.get('surname', ''),
                     nationality=row.get('nationality', ''),
-                    company=row['company'],
+                    company=row.get('company', ''),
                     role=row.get('role', ''),
-                    telephone=row['telephone'],
+                    telephone=row.get('telephone', ''),
                     ip_address='127.0.0.1',  # Replace with actual IP if available
                     privacy_policy_accepted=True,
                     notes='Imported from Excel',
