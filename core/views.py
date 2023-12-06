@@ -12,6 +12,10 @@ from .tasks import send_custom_email_task, process_subscription_task
 from .template_utils import render_template_from_string
 
 
+def home(request):
+    return render(request, 'home.html')
+
+
 def proxy_django_auth(request):
     """used for authentication by nginx when accessing static media files"""
     if request.user.is_authenticated:
