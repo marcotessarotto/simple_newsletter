@@ -21,8 +21,10 @@ from django.urls import path, include
 from core import views
 from core.views import proxy_django_auth
 from simple_newsletter import settings
+from two_factor.urls import urlpatterns as tf_urls
 
 urlpatterns = [
+    path('', include(tf_urls)),
     path('admin/', admin.site.urls),
 
     path('survey_newsletter_subscription/<str:short_name>/', views.survey_newsletter_subscription,

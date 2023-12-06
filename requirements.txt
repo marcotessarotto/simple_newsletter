@@ -17,3 +17,6 @@ celery[redis]
 pytest
 email_validator
 pandas
+django-otp
+django-two-factor-auth[phonenumbers]
+phonenumbers

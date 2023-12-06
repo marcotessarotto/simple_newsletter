@@ -89,6 +89,17 @@ INSTALLED_APPS = [
     'bootstrap5',
     'ckeditor',
     'ckeditor_uploader',
+
+    # see also:
+    # https://django-two-factor-auth.readthedocs.io/en/stable/installation.html
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_email',  # <- if you want email capability.
+    'two_factor',
+    'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
+    'two_factor.plugins.email',  # <- if you want email capability.
+    # 'two_factor.plugins.yubikey',  # <- for yubikey capability.
 ]
 
 # rechapcha settings:
@@ -100,6 +111,11 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+
+    # see also:
+    # https://django-two-factor-auth.readthedocs.io/en/stable/installation.html
+    'django_otp.middleware.OTPMiddleware',
+
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -188,3 +204,10 @@ EMAIL_PORT = 25
 
 # For local testing purposes, you can use the console backend which prints emails to the console instead of sending them:
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# see also:
+# https://django-two-factor-auth.readthedocs.io/en/stable/installation.html
+LOGIN_URL = 'two_factor:login'
+
+# this one is optional
+LOGIN_REDIRECT_URL = 'two_factor:profile'
