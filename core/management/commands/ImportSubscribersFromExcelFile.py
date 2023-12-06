@@ -34,23 +34,29 @@ class Command(BaseCommand):
                     print(f"subscription_to_newsletter is False, skipping... email: {row['email']}")
                     continue
 
+                if row['email'] is None:
+                    print(f"email is None, skipping... email: {row['email']}")
+                    continue
+
                 # check if the email address is already in the database
                 if SubscriptionToNewsletter.objects.filter(email=row['email']).exists():
                     print(f"Email {row['email']} already exists in the database, skipping...")
                     continue
 
+                honorific = row.get('honorific')
+
                 subscription = SubscriptionToNewsletter(
                     newsletter=newsletter_instance,
-                    honorific=row['honorific'] if row['honorific'] in dict(SubscriptionToNewsletter.HONORIFICS) else "",
+                    honorific=honorific if honorific in dict(SubscriptionToNewsletter.HONORIFICS) else "",
                     email=row['email'],
                     name=row['name'],
                     surname=row['surname'],
-                    nationality=row['nationality'],
+                    nationality=row.get('nationality', ''),
                     company=row['company'],
-                    role=row['role'],
+                    role=row.get('role', ''),
                     telephone=row['telephone'],
-                    ip_address='-',  # Replace with actual IP if available
-                    privacy_policy_accepted=True,  # Set according to your data
+                    ip_address='127.0.0.1',  # Replace with actual IP if available
+                    privacy_policy_accepted=True,
                     notes='Imported from Excel',
                     subscription_source='import',
                     subscribed=True,
@@ -61,6 +67,8 @@ class Command(BaseCommand):
                 )
                 subscription.save()
 
+                print(f"Created subscription: {subscription}")
+
             self.stdout.write(
                 self.style.SUCCESS(
                     f'Successfully imported subscribers from "{filename}" and associated them with newsletter id "{newsletter_id}"'
@@ -70,4 +78,5 @@ class Command(BaseCommand):
         except FileNotFoundError:
             raise CommandError(f'File "{filename}" does not exist')
         except Exception as e:
+            print(e)
             raise CommandError(f'An error occurred: {e}') from e
