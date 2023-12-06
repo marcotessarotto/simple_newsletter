@@ -19,13 +19,15 @@ from django.contrib import admin
 from django.urls import path, include
 
 from core import views
-from core.views import proxy_django_auth
+from core.views import proxy_django_auth, home
 from simple_newsletter import settings
 from two_factor.urls import urlpatterns as tf_urls
 
 urlpatterns = [
     path('', include(tf_urls)),
     path('admin/', admin.site.urls),
+
+    path('', home, name='home'),
 
     path('survey_newsletter_subscription/<str:short_name>/', views.survey_newsletter_subscription,
          name='survey_newsletter_subscription'),
@@ -53,3 +55,9 @@ if settings.DEBUG:
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ]

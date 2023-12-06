@@ -17,3 +17,6 @@ NOTIFICATION_BCC_RECIPIENTS = 'admin email(s), comma separated; or any other ema
 
 
 BASE_URL='http://localhost:8000'
+
+
+DEFAULT_FROM_EMAIL='your_email@your_domain.com'

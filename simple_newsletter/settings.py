@@ -100,6 +100,7 @@ INSTALLED_APPS = [
     'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
     'two_factor.plugins.email',  # <- if you want email capability.
     # 'two_factor.plugins.yubikey',  # <- for yubikey capability.
+    'debug_toolbar',
 ]
 
 # rechapcha settings:
@@ -111,12 +112,12 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-
+    'django.contrib.messages.middleware.MessageMiddleware',
     # see also:
     # https://django-two-factor-auth.readthedocs.io/en/stable/installation.html
     'django_otp.middleware.OTPMiddleware',
-
-    'django.contrib.messages.middleware.MessageMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'two_factor.middleware.threadlocals.ThreadLocals',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -208,6 +209,23 @@ EMAIL_PORT = 25
 # see also:
 # https://django-two-factor-auth.readthedocs.io/en/stable/installation.html
 LOGIN_URL = 'two_factor:login'
-
-# this one is optional
 LOGIN_REDIRECT_URL = 'two_factor:profile'
+
+LOGOUT_REDIRECT_URL = 'home'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'two_factor': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        }
+    }
+}
