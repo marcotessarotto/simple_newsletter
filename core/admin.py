@@ -95,7 +95,7 @@ class VisitorAdmin(admin.ModelAdmin):
 
 
 @admin.register(VisitSurvey)
-class VisitSurveyAdmin(admin.ModelAdmin):
+class VisitSurveyAdmin(admin.ModelAdmin, ExportExcelMixin):
     list_display = ('id', 'created_at', 'ip_address', 'participated', 'met_expectations', 'interested_in_future_visits', 'participate_in_bsbf', )
     list_filter = [ 'participated', 'met_expectations', 'interested_in_future_visits', 'participate_in_bsbf']
 
