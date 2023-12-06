@@ -41,6 +41,10 @@ class EmailSettings(models.Model):
     def __str__(self):
         return f"EmailSettings for {self.host}"
 
+    class Meta:
+        verbose_name = "Email settings"
+        verbose_name_plural = "Email settings"
+
 
 class Newsletter(models.Model):
     name = models.CharField(max_length=255)

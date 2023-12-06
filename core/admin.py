@@ -128,3 +128,5 @@ class EmailSettingsAdmin(admin.ModelAdmin):
                     # 'email_reply_to',
                     # 'email_subject_prefix',
                     # 'email_use_localtime', 'email_log_level', 'email_log_file', 'email_log_format', )
+
+
