@@ -53,9 +53,54 @@ CKEDITOR_UPLOAD_PATH = 'content/ckeditor/'
 CKEDITOR_IMAGE_BACKEND = 'pillow'
 CKEDITOR_CONFIGS = {
     'default': {
-        # ... any additional CKEditor options you want to include ...
+        'height': '900px',
+        'width': '1200px',
+        'toolbar': 'Custom',  # Use a custom toolbar configuration
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'],
+            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],  # For text alignment
+            ['Link', 'Unlink'],
+            ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar'],  # For images and tables
+            ['Styles', 'Format', 'Font', 'FontSize'],
+            ['TextColor', 'BGColor'],
+            ['Maximize'],
+            ['Button'],  # If you have a custom plugin for buttons
+            ['Source']
+        ],
+        'extraPlugins': ','.join([
+            'uploadimage',  # the upload image feature
+            # your extra plugins here
+            'div',
+            'autolink',
+            'autoembed',
+            'embedsemantic',
+            'autogrow',
+            # 'devtools',
+            'widget',
+            'lineutils',
+            'clipboard',
+            'dialog',
+            'dialogui',
+            'elementspath',
+            'menubutton',
+            'table',
+            'tableresize',
+            'tabletools',
+            'pastefromword'
+        ]),
+        'contentsCss': ['/static/css/ckeditor_custom.css'],
+        # Other configuration settings...
     },
 }
+
+# CKEDITOR_CONFIGS = {
+#     'default': {
+#         'contentsCss': ['/static/css/ckeditor_custom.css'],
+#         'toolbar': 'Full',  # or any other toolbar layout you prefer
+#         # ... any other CKEditor options you want to include ...
+#     },
+# }
 
 # Celery settings
 CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Update this to your Redis broker URL
