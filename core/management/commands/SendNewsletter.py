@@ -95,6 +95,7 @@ class Command(BaseCommand):
                 "content": message_instance.message_content,
                 "unsubscribe_link": BASE_URL + generate_unsubscribe_link(subscriber),
                 "web_version_view": BASE_URL + generate_message_web_view(message_instance),
+                "year": timezone.now().year,
             }
 
             html_content = render_template_from_string(template_content, context=context)
