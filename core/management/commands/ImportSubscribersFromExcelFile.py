@@ -12,9 +12,14 @@ class Command(BaseCommand):
         parser.add_argument('newsletter_id', type=int,
                             help='The ID of the Newsletter instance to associate with the subscribers')
 
+        # add an optional string argument called "--motivation" to the command
+        parser.add_argument("--motivation", type=str, default="import from excel", required=False, help="Motivation for the subscription")
+
     def handle(self, *args, **options):
         filename = options['filename']
         newsletter_id = options['newsletter_id']
+
+        motivation = options['motivation']
 
         try:
             # Retrieve the Newsletter instance
@@ -59,7 +64,7 @@ class Command(BaseCommand):
                     ip_address='127.0.0.1',  # Replace with actual IP if available
                     privacy_policy_accepted=True,
                     notes='Imported from Excel',
-                    subscription_source='import',
+                    subscription_source=motivation,
                     subscribed=True,
                     verification_email_sent=False,
                     # verification_email_sent_at=now(),
