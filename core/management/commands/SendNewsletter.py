@@ -23,6 +23,9 @@ class Command(BaseCommand):
         parser.add_argument("--nosave", action="store_true", default=False, help="Do not save the results to the database")
         parser.add_argument("--oksend", action="store_true", default=True, help="send the emails (if true), do not send email if false")
 
+        # define an optional int argument called "--number" to the command
+        parser.add_argument("--number", type=int, default=1, required=False, help="Number of messages to send")
+
     def handle(self, *args, **options):
 
         newsletter = options.get("newsletter")  # newsletter short name
@@ -31,6 +34,8 @@ class Command(BaseCommand):
 
         nosave = options.get("nosave")  # do not save the results to the database
         oksend = options.get("oksend")  # ok to send the emails
+
+        number = options.get("number")  # number of messages to send
 
         # print(newsletter)
         # print(template)
@@ -125,7 +130,7 @@ class Command(BaseCommand):
                 register_message_delivery(message_instance.id, subscriber.id)
 
             counter += 1
-            if counter >= 1:
+            if counter >= number:
                 break
 
         print(f"Sent {counter} messages")
