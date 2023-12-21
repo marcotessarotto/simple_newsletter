@@ -1,3 +1,5 @@
+import time
+
 from django.core.management import BaseCommand
 from django.utils import timezone
 
@@ -132,6 +134,9 @@ class Command(BaseCommand):
             counter += 1
             if counter >= number:
                 break
+
+            # sleep 1 second
+            time.sleep(1)
 
         print(f"Sent {counter} messages")
 
