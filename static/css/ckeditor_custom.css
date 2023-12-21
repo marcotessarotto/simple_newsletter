@@ -1,3 +1,8 @@
 .ckeditor-table-2col td {
     width: 50%;
 }
+
+body {
+    line-height: 1.5;  /* This sets the line spacing (interline) to 1.5 */
+}
+

@@ -61,12 +61,12 @@ CKEDITOR_CONFIGS = {
             ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'],
             ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],  # For text alignment
             ['Link', 'Unlink'],
-            ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar'],  # For images and tables
+            ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'spacingsliders'],  # For images and tables
             ['Styles', 'Format', 'Font', 'FontSize'],
             ['TextColor', 'BGColor'],
             ['Maximize'],
-            ['Button'],  # If you have a custom plugin for buttons
-            ['Source']
+            ['Button', 'Source'],  # If you have a custom plugin for buttons
+
         ],
         'extraPlugins': ','.join([
             'uploadimage',  # the upload image feature
@@ -87,7 +87,11 @@ CKEDITOR_CONFIGS = {
             'table',
             'tableresize',
             'tabletools',
-            'pastefromword'
+            'pastefromword',
+            'spacingsliders',
+            'floatpanel',
+            'panelbutton',
+            'button',
         ]),
         'contentsCss': ['/static/css/ckeditor_custom.css'],
         # Other configuration settings...
