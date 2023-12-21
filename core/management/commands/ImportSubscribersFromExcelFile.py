@@ -45,7 +45,7 @@ class Command(BaseCommand):
                     continue
 
                 # check if the email address is already in the database
-                if SubscriptionToNewsletter.objects.filter(email=row['email']).exists():
+                if SubscriptionToNewsletter.objects.filter(email__iexact=row['email'].lower()).exists():
                     print(f"Email {row['email']} already exists in the database, skipping...")
                     continue
 
