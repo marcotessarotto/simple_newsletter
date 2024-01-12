@@ -131,8 +131,7 @@ class EmailSettingsAdmin(admin.ModelAdmin):
                     # 'email_use_localtime', 'email_log_level', 'email_log_file', 'email_log_format', )
 
 
-
 @admin.register(MessageLog)
 class MessageLogAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created_at', 'valid', 'processed', 'original_uri')
+    list_display = ('id', 'created_at', 'valid', 'processed', 'http_real_ip', 'original_uri')
     # list_filter = [ 'name']
