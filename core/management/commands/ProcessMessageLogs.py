@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
     # Function to check if two logs are within 10 milliseconds
     def is_very_near(log1, log2):
-        return abs(log1.created_at - log2.created_at) <= timedelta(milliseconds=60)
+        return abs(log1.created_at - log2.created_at) <= timedelta(milliseconds=105)
 
     # Function to calculate difference in milliseconds
     def difference_in_milliseconds(log1, log2):
