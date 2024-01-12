@@ -202,6 +202,7 @@ class MessageLog(models.Model):
 
     valid = models.BooleanField(default=False)
     processed = models.BooleanField(default=False)
+    group_start_id = models.IntegerField(default=0)
 
     message = models.ForeignKey(Message, on_delete=models.CASCADE, blank=True, null=True)
 

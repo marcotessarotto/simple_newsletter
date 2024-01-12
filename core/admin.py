@@ -133,5 +133,5 @@ class EmailSettingsAdmin(admin.ModelAdmin):
 
 @admin.register(MessageLog)
 class MessageLogAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created_at', 'valid', 'processed', 'http_real_ip', 'original_uri')
+    list_display = ('id', 'created_at', 'group_start_id', 'valid', 'processed', 'http_real_ip', 'original_uri')
     # list_filter = [ 'name']
