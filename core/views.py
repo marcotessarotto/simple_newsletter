@@ -8,7 +8,7 @@ from .business_logic import create_event_log
 from .forms import SubscriptionForm, VisitSurveyForm
 from .html_utils import make_urls_absolute
 from .models import Newsletter, SubscriptionToNewsletter, Visitor, Message
-from .tasks import send_custom_email_task, process_subscription_task
+from .tasks import send_custom_email_task, process_subscription_task, register_static_access_log
 from .template_utils import render_template_from_string
 
 
@@ -21,6 +21,50 @@ def proxy_django_auth(request):
     if request.user.is_authenticated:
         return HttpResponse(status=200)
     return HttpResponse(status=403)
+
+
+def notify_media_access(request):
+    """Used by Nginx for logging when accessing static media files."""
+
+    # request.META: {'wsgi.errors': <gunicorn.http.wsgi.WSGIErrorsWrapper object at 0x7fd0b3122dd0>,
+    # 'wsgi.version': (1, 0), 'wsgi.multithread': False, 'wsgi.multiprocess': True, 'wsgi.run_once': False,
+    # 'wsgi.file_wrapper': <class 'gunicorn.http.wsgi.FileWrapper'>, 'wsgi.input_terminated': True,
+    # 'SERVER_SOFTWARE': 'gunicorn/21.2.0', 'wsgi.input': <gunicorn.http.body.Body object at 0x7fd0b2f58850>,
+    # 'gunicorn.socket': <socket.socket fd=9, family=1, type=1, proto=0, laddr=/run/gunicorn-simple-newsletter.sock>,
+    # 'REQUEST_METHOD': 'GET', 'QUERY_STRING': '', 'RAW_URI': '/notify_media_access/',
+    # 'SERVER_PROTOCOL': 'HTTP/1.0', 'HTTP_HOST': 'newsletter.bsbf2024.org',
+    # 'HTTP_X_REAL_IP': '95.214.216.18', 'HTTP_X_FORWARDED_FOR': '95.214.216.18',
+    # 'HTTP_X_FORWARDED_PROTO': 'https',
+    # 'HTTP_X_ORIGINAL_URI': '/media/content/ckeditor/2023/12/21/fvg_auguri_bsbf_2024_def_small_tBSJcBy.jpg',
+    # 'HTTP_CONNECTION': 'close',
+    # 'HTTP_USER_AGENT': 'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0',
+    # 'HTTP_ACCEPT': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+    # 'HTTP_ACCEPT_LANGUAGE': 'en-US,en;q=0.5',
+    # 'HTTP_ACCEPT_ENCODING': 'gzip, deflate, br',
+    # 'HTTP_REFERER': 'https://newsletter.bsbf2024.org/view_message/ee9edf9a-73fc-4677-ba76-d01acafd100c/',
+    # 'HTTP_COOKIE': 'csrftoken=gE90dl9YCKQdXcEzKLCtGxxHOKes6Eg7; sessionid=xntt5n8al95rcknb5m75mfgmi5154cn4; ckCsrfToken=56hRxCcmnBb66CYE03OSBUucvEm7o4FV8d63T799', 'HTTP_UPGRADE_INSECURE_REQUESTS': '1', 'HTTP_SEC_FETCH_DEST': 'document', 'HTTP_SEC_FETCH_MODE': 'navigate', 'HTTP_SEC_FETCH_SITE': 'same-origin', 'HTTP_SEC_FETCH_USER': '?1', 'HTTP_IF_MODIFIED_SINCE': 'Thu, 21 Dec 2023 15:15:31 GMT', 'HTTP_IF_NONE_MATCH': '"65845693-14efb"', 'wsgi.url_scheme': 'https', 'REMOTE_ADDR': '',
+    # 'SERVER_NAME': 'newsletter.bsbf2024.org', 'SERVER_PORT': '443', 'PATH_INFO': '/notify_media_access/', 'SCRIPT_NAME': '', 'CSRF_COOKIE': 'gE90dl9YCKQdXcEzKLCtGxxHOKes6Eg7'}
+
+    if request.META:
+        try:
+
+            log_dict = {
+                'original_uri': request.META.get('HTTP_X_ORIGINAL_URI', '-'),
+                'http_referer': request.META.get('HTTP_REFERER', '-'),
+                'http_user_agent': request.META.get('HTTP_USER_AGENT', 'unknown'),
+                'http_real_ip': request.META.get('HTTP_X_REAL_IP', 'unknown'),
+                'http_cookie': request.META.get('HTTP_COOKIE', '-'),
+            }
+
+            print(f"calling register_static_access_log: {log_dict}")
+            register_static_access_log.delay(log_dict)
+
+        except Exception as e:
+            print(f"notify_media_access - Exception: {e}")
+    else:
+        print("notify_media_access - no request.META")
+
+    return HttpResponse(status=200)
 
 
 def confirm_subscription(request, token):
@@ -107,7 +151,8 @@ def unsubscribe(request, token):
 
     # since at the moment multiple subscriptions with the same email are allowed to the same newsletter,
     # we do a query to check if there are other subscriptions with the same email
-    rs = SubscriptionToNewsletter.objects.filter(email=subscriber.email).filter(subscribed=True).filter(newsletter=subscriber.newsletter)
+    rs = SubscriptionToNewsletter.objects.filter(email=subscriber.email).filter(subscribed=True).filter(
+        newsletter=subscriber.newsletter)
 
     for s in rs:
         print(f"unsubscribe - {s.id} {s.email} {s.subscribed} {s.newsletter.short_name}")
@@ -265,5 +310,3 @@ def subscribe_to_newsletter(request, short_name):
     }
 
     return render(request, 'subscriptions/visit_survey_newsletter_subscription.html', context=context)
-
-

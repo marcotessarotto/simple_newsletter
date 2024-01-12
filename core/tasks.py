@@ -6,13 +6,21 @@ from django.utils import timezone
 
 from core.business_logic import create_event_log
 from core.logic_email import send_custom_email
-from core.models import SubscriptionToNewsletter
+from core.models import SubscriptionToNewsletter, MessageLog
 from simple_newsletter.settings import NOTIFICATION_BCC_RECIPIENTS
 
 
 @shared_task
 def send_custom_email_task(sender_email, recipient_email, subject, html_content, bcc=None, email_settings_id=None):
     return send_custom_email(sender_email, recipient_email, subject, html_content, bcc, email_settings_id)
+
+
+@shared_task
+def register_static_access_log(log_dict):
+
+    print(f"register_static_access: {log_dict}")
+
+    new_log = MessageLog.create_new_message_log(log_dict)
 
 
 @shared_task

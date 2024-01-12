@@ -181,12 +181,55 @@ class Message(models.Model):
 
     web_view_counter = models.IntegerField(default=0)
 
+    email_view_counter = models.IntegerField(default=0)
+
     def __str__(self):
         return self.subject
 
     def increment_web_view_counter(self):
         self.web_view_counter += 1
         self.save()
+
+
+class MessageLog(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    original_uri = models.CharField(max_length=2048, blank=True, default='-')  # Long URLs
+    http_referer = models.CharField(max_length=2048, blank=True, default='-')  # HTTP referer URL
+    http_user_agent = models.CharField(max_length=1024, blank=True, default='unknown')  # User agent
+    http_real_ip = models.GenericIPAddressField(blank=True, null=True, default='unknown')  # IP Address
+    http_cookie = models.CharField(max_length=1024, blank=True, default='-')  # Cookie
+
+    valid = models.BooleanField(default=False)
+    processed = models.BooleanField(default=False)
+
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, blank=True, null=True)
+
+    @classmethod
+    def create_new_message_log(cls, log_dict):
+        """
+        Create a new message log record with the given log dictionary.
+        :param log_dict: Dictionary containing log information
+        :return: MessageLog instance
+        """
+
+        message_log = cls(
+            original_uri=log_dict.get('original_uri', '-'),
+            http_referer=log_dict.get('http_referer', '-'),
+            http_user_agent=log_dict.get('http_user_agent', 'unknown'),
+            http_real_ip=log_dict.get('http_real_ip', 'unknown'),
+            http_cookie=log_dict.get('http_cookie', '-'),
+        )
+
+        if not message_log.original_uri.startswith("/media/"):
+            # print("skipping save")
+            return None
+
+        message_log.save()
+        return message_log
+
+    def __str__(self):
+        return f"MessageLog #{self.id} {self.created_at} "
 
 
 class Visitor(models.Model):

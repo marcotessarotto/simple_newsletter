@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from core.models import Newsletter, SubscriptionToNewsletter, Message, Visitor, VisitSurvey, EventLog, EmailTemplate, \
-    NewsletterDeliveryRecord, EmailSettings
+    NewsletterDeliveryRecord, EmailSettings, MessageLog
 from simple_newsletter.admin_utils import ExportCsvMixin, ExportRawDataCsvMixin, ExportExcelMixin
 from django.utils.translation import gettext as _
 
@@ -131,3 +131,8 @@ class EmailSettingsAdmin(admin.ModelAdmin):
                     # 'email_use_localtime', 'email_log_level', 'email_log_file', 'email_log_format', )
 
 
+
+@admin.register(MessageLog)
+class MessageLogAdmin(admin.ModelAdmin):
+    list_display = ('id', 'created_at', 'valid', 'processed', 'original_uri')
+    # list_filter = [ 'name']

@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from core import views
-from core.views import proxy_django_auth, home
+from core.views import proxy_django_auth, home, notify_media_access
 from simple_newsletter import settings
 from two_factor.urls import urlpatterns as tf_urls
 
@@ -48,6 +48,8 @@ urlpatterns = [
 
     # used by nginx to verify authentication and access to media files.
     path('proxy_django_auth/', proxy_django_auth, name='proxy_django_auth'),
+
+    path('notify_media_access/', notify_media_access, name='notify_media_access'),
 ]
 
 if settings.DEBUG:
