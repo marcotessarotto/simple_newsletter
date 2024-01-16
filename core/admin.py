@@ -82,6 +82,7 @@ class MessageAdmin(admin.ModelAdmin, ExportCsvMixin, ExportRawDataCsvMixin):
                     'processed_at',
                     'to_be_processed_at',
                     'web_view_counter',
+                    'email_view_counter',
                     'created_at',
                     )
     search_fields = ('id', 'subject', 'content',)
