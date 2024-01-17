@@ -25,8 +25,10 @@ class Command(BaseCommand):
             # Retrieve the Newsletter instance
             try:
                 newsletter_instance = Newsletter.objects.get(id=newsletter_id)
-            except Newsletter.DoesNotExist:
-                raise CommandError(f'Newsletter with id "{newsletter_id}" does not exist')
+            except Newsletter.DoesNotExist as e:
+                raise CommandError(
+                    f'Newsletter with id "{newsletter_id}" does not exist'
+                ) from e
 
             # Read the Excel file
             df = pd.read_excel(filename)
