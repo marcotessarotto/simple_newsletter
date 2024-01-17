@@ -183,6 +183,19 @@ class Message(models.Model):
 
     email_view_counter = models.IntegerField(default=0)
 
+    @staticmethod
+    def search_in_message_content(substring):
+        """
+        Search for a substring in the message_content of all Message instances.
+
+        Args:
+            substring (str): The substring to search for.
+
+        Returns:
+            QuerySet: A QuerySet containing Message instances where substring is found in message_content.
+        """
+        return Message.objects.filter(message_content__icontains=substring)
+
     def __str__(self):
         return self.subject
 

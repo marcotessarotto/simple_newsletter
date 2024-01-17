@@ -1,7 +1,5 @@
 from django.core.management import BaseCommand
-from django.db.models import F
 from datetime import timedelta
-import itertools
 
 from core.models import MessageLog
 
@@ -12,9 +10,9 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         pass
 
-    # Function to check if two logs are within 10 milliseconds
+    # Function to check if two logs are "near" enough to be in the same group
+    @staticmethod
     def is_very_near(log1: MessageLog, log2: MessageLog):
-
         timedelta_limit = timedelta(milliseconds=100)
 
         # compare http_real_ip field of log1 and log2
@@ -24,11 +22,12 @@ class Command(BaseCommand):
         return abs(log1.created_at - log2.created_at) <= timedelta_limit
 
     # Function to calculate difference in milliseconds
+    @staticmethod
     def difference_in_milliseconds(log1, log2):
         return int((log1.created_at - log2.created_at).total_seconds() * 1000)
 
     def handle(self, *args, **options):
-        # Fetch MessageLog instances, ordered by created_at
+        # Fetch MessageLog instances, ordered by id
         message_logs = MessageLog.objects.filter(processed=False).order_by('id')
 
         last_id = None
