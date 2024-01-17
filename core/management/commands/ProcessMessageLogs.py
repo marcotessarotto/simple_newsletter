@@ -13,8 +13,15 @@ class Command(BaseCommand):
         pass
 
     # Function to check if two logs are within 10 milliseconds
-    def is_very_near(log1, log2):
-        return abs(log1.created_at - log2.created_at) <= timedelta(milliseconds=105)
+    def is_very_near(log1: MessageLog, log2: MessageLog):
+
+        timedelta_limit = timedelta(milliseconds=100)
+
+        # compare http_real_ip field of log1 and log2
+        if log1.http_real_ip == log2.http_real_ip:
+            timedelta_limit = timedelta(seconds=2)
+
+        return abs(log1.created_at - log2.created_at) <= timedelta_limit
 
     # Function to calculate difference in milliseconds
     def difference_in_milliseconds(log1, log2):
@@ -27,25 +34,25 @@ class Command(BaseCommand):
         last_id = None
         group_start_instance = None
 
-        for message_log in message_logs:
+        for message_log_instance in message_logs:
             if group_start_instance is None:
-                group_start_instance = message_log
+                group_start_instance = message_log_instance
                 group_start_instance.processed = True
                 group_start_instance.group_start_id = group_start_instance.id
                 group_start_instance.save()
                 continue
 
-            print(f"message_log: {message_log.id}")
-            print(f"delta: {Command.difference_in_milliseconds(message_log, group_start_instance)} ")
+            print(f"message_log: {message_log_instance.id}")
+            print(f"delta: {Command.difference_in_milliseconds(message_log_instance, group_start_instance)} ")
 
-            if Command.is_very_near(group_start_instance, message_log):
+            if Command.is_very_near(group_start_instance, message_log_instance):
                 # message_log is in the same group as group_start_instance
-                message_log.group_start_id = group_start_instance.id
-                message_log.processed = True
-                message_log.save()
+                message_log_instance.group_start_id = group_start_instance.id
+                message_log_instance.processed = True
+                message_log_instance.save()
             else:
                 # message_log is in a different group than group_start_instance
-                group_start_instance = message_log
+                group_start_instance = message_log_instance
                 group_start_instance.processed = True
                 group_start_instance.group_start_id = group_start_instance.id
                 group_start_instance.save()
