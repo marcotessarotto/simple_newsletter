@@ -33,12 +33,36 @@
         line-height: 1.2; /* Adjusts the height of lines within the div, if necessary */
     }
 
+    .mybluebutton {
+        background-color: #1990c8 !important; /* Custom background color */
+        border-color: #1990c8 !important; /* Matching border color */
+        color: #ffffff !important; /* Custom text color for h1 and button text, assuming white for good contrast */
+    }
+
+    .mybluebutton:hover,
+    .mybluebutton:focus {
+        background-color: #1177a2 !important; /* Darker shade for hover/focus */
+        border-color: #1177a2 !important; /* Matching border color for hover/focus */
+    }
+
+    .mybluecolor {
+        color: #1990c8 !important; /* Custom text color for h1 */
+    }
+
+    .mybluecolorbg {
+        background-color: #1990c8 !important; /* Custom background color */
+        border-color: #1990c8 !important; /* Matching border color */
+        color: #ffffff !important; /* Custom text color for h1 and button text, assuming white for good contrast */
+    }
+
+
+
   </style>
 </head>
 <body>
 
 <div class="container">
-  <ul class="nav bg-info">
+  <ul class="nav bg-info mybluecolorbg">
     <li class="nav-item">
 <!--      <a class="nav-link link-light" href="/">Newsletter</a>-->
         {% block content_title %}
