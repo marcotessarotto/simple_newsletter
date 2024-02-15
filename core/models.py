@@ -239,7 +239,7 @@ class MessageLog(models.Model):
             http_cookie=log_dict.get('http_cookie', '-'),
         )
 
-        if not message_log.original_uri.startswith("/media/"):
+        if not message_log.original_uri.startswith("/media/") and not message_log.original_uri.startswith("media/"):
             # print("skipping save")
             return None
 

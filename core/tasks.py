@@ -30,6 +30,9 @@ def register_static_access_log_inc_email_view_counter(log_dict, message_id):
 
     new_log = MessageLog.create_new_message_log(log_dict)
 
+    # if new_log:
+    #     print(f"new_log: {new_log.id}")
+
     if message_instance := Message.objects.get(id=message_id):
         message_instance.increment_email_view_counter()
 
