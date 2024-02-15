@@ -203,6 +203,10 @@ class Message(models.Model):
         self.web_view_counter += 1
         self.save()
 
+    def increment_email_view_counter(self):
+        self.email_view_counter += 1
+        self.save()
+
 
 class MessageLog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)

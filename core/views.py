@@ -1,14 +1,19 @@
+import mimetypes
+import os
+
 from django.core.exceptions import ValidationError
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.urls import reverse
 
+from simple_newsletter import settings
 from .business_logic import create_event_log
 from .forms import SubscriptionForm, VisitSurveyForm
 from .html_utils import make_urls_absolute
 from .models import Newsletter, SubscriptionToNewsletter, Visitor, Message
-from .tasks import send_custom_email_task, process_subscription_task, register_static_access_log
+from .tasks import send_custom_email_task, process_subscription_task, register_static_access_log, \
+    register_static_access_log_inc_email_view_counter
 from .template_utils import render_template_from_string
 
 
@@ -310,3 +315,48 @@ def subscribe_to_newsletter(request, short_name):
     }
 
     return render(request, 'subscriptions/visit_survey_newsletter_subscription.html', context=context)
+
+
+def process_download_media_request(request, media_id, url):
+    if request.META:
+        try:
+
+            log_dict = {
+                'original_uri': url,
+                'http_referer': request.META.get('HTTP_REFERER', '-'),
+                'http_user_agent': request.META.get('HTTP_USER_AGENT', 'unknown'),
+                'http_real_ip': request.META.get('HTTP_X_REAL_IP', 'unknown'),
+                'http_cookie': request.META.get('HTTP_COOKIE', '-'),
+            }
+
+            print(f"calling register_static_access_log_inc_email_view_counter: {log_dict}")
+            register_static_access_log_inc_email_view_counter.delay(log_dict, media_id)
+
+        except Exception as e:
+            print(f"process_download_media_request - Exception: {e}")
+    else:
+        print("process_download_media_request - no request.META")
+
+
+def download_media(request, media_id, url):
+    # example for url:
+    # /media/content/ckeditor/2024/01/31/image.jpg
+
+    file_path = f"{settings.MEDIA_ROOT_LESS_URL}/{url}"
+
+    # print(f"download_media - file_path: {file_path}")
+
+    if os.path.exists(file_path):
+        if mt := mimetypes.guess_type(file_path):
+            if mime_type := mt[0]:
+                with open(file_path, 'rb') as fh:
+                    response = HttpResponse(fh.read(), content_type=mime_type)
+                    response[
+                        'Content-Disposition'
+                    ] = f'inline; filename={os.path.basename(file_path)}'
+
+                    process_download_media_request(request, media_id, url)
+
+                    return response
+
+    raise Http404

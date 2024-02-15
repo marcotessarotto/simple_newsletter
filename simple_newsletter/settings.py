@@ -47,6 +47,8 @@ RECAPTCHA_REQUIRED_SCORE = 0.85
 MEDIA_ROOT = '/opt/media/simple_newsletter/media/'
 MEDIA_URL = '/media/'
 
+MEDIA_ROOT_LESS_URL = '/opt/media/simple_newsletter'
+
 BASE_URL = env('BASE_URL')
 
 CKEDITOR_UPLOAD_PATH = 'content/ckeditor/'

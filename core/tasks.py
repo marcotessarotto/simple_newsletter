@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from core.business_logic import create_event_log
 from core.logic_email import send_custom_email
-from core.models import SubscriptionToNewsletter, MessageLog
+from core.models import SubscriptionToNewsletter, MessageLog, Message
 from simple_newsletter.settings import NOTIFICATION_BCC_RECIPIENTS
 
 
@@ -21,6 +21,18 @@ def register_static_access_log(log_dict):
     print(f"register_static_access: {log_dict}")
 
     new_log = MessageLog.create_new_message_log(log_dict)
+
+
+@shared_task
+def register_static_access_log_inc_email_view_counter(log_dict, message_id):
+
+    print(f"register_static_access_log_inc_email_view_counter: {log_dict} message_id={message_id}")
+
+    new_log = MessageLog.create_new_message_log(log_dict)
+
+    if message_instance := Message.objects.get(id=message_id):
+        message_instance.increment_email_view_counter()
+
 
 
 @shared_task
@@ -71,3 +83,4 @@ def process_subscription_task(subscription_id):
         event_data=f"subscriber: {subscription.email}",
         event_target=subscription.email
     )
+

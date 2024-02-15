@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 from core import views
 from core.views import proxy_django_auth, home, notify_media_access
@@ -50,6 +50,10 @@ urlpatterns = [
     path('proxy_django_auth/', proxy_django_auth, name='proxy_django_auth'),
 
     path('notify_media_access/', notify_media_access, name='notify_media_access'),
+
+    # path('mdl/<int:media_id>/<str:url>', views.download_media, name='download_media'),
+    re_path(r'^mdl/(?P<media_id>\d+)/(?P<url>.+)$', views.download_media, name='download_media'),
+
 ]
 
 if settings.DEBUG:
