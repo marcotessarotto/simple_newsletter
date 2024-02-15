@@ -34,7 +34,6 @@ def register_static_access_log_inc_email_view_counter(log_dict, message_id):
         message_instance.increment_email_view_counter()
 
 
-
 @shared_task
 def process_subscription_task(subscription_id):
     subscription: SubscriptionToNewsletter = SubscriptionToNewsletter.objects.get(id=subscription_id)
