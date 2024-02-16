@@ -355,6 +355,11 @@ def download_media(request, media_id, random_string, url):
                         'Content-Disposition'
                     ] = f'inline; filename={os.path.basename(file_path)}'
 
+                    # Add headers to prevent caching
+                    response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+                    response['Pragma'] = 'no-cache'  # HTTP 1.0.
+                    response['Expires'] = '0'  # Proxies.
+
                     process_download_media_request(request, media_id, url)
 
                     return response
