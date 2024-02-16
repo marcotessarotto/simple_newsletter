@@ -7,7 +7,7 @@ from core.business_logic import has_message_been_sent_to_subscriber, create_even
 from core.html_utils import make_urls_absolute
 from core.models import EmailTemplate, Newsletter, Message, SubscriptionToNewsletter
 from core.tasks import send_custom_email_task
-from core.template_utils import render_template_from_string
+from core.template_utils import render_template_from_string, get_rnd_str
 from core.views import generate_unsubscribe_link, generate_message_web_view
 from simple_newsletter.settings import NOTIFICATION_BCC_RECIPIENTS, BASE_URL
 
@@ -96,6 +96,7 @@ class Command(BaseCommand):
             # each subscriber has a unique token
             context = {
                 "subscriber": subscriber,
+                "rnd_str": get_rnd_str(),
                 # "newsletter": newsletter_instance,
                 "message": message_instance,
                 "subject": message_instance.subject,

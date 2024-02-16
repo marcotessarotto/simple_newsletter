@@ -338,7 +338,7 @@ def process_download_media_request(request, media_id, url):
         print("process_download_media_request - no request.META")
 
 
-def download_media(request, media_id, url):
+def download_media(request, media_id, random_string, url):
     # example for url:
     # /media/content/ckeditor/2024/01/31/image.jpg
 

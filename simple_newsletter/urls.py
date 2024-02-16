@@ -52,7 +52,7 @@ urlpatterns = [
     path('notify_media_access/', notify_media_access, name='notify_media_access'),
 
     # path('mdl/<int:media_id>/<str:url>', views.download_media, name='download_media'),
-    re_path(r'^mdl/(?P<media_id>\d+)/(?P<url>.+)$', views.download_media, name='download_media'),
+    re_path(r'^mdl/(?P<media_id>\d+)/(?P<random_string>[a-zA-Z0-9]+)/(?P<url>.+)$', views.download_media, name='download_media'),
 
 ]
 
