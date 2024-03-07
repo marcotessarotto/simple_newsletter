@@ -69,11 +69,10 @@ class Command(BaseCommand):
         print(f"newsletter: {newsletter_instance}")
         print(f"template: {template_instance}")
 
-        # get all subscribers of the newsletter that have confirmed their subscription:
+        # get all subscribers of the newsletter that are subscribed:
         rs = (SubscriptionToNewsletter.objects
               .filter(newsletter=newsletter_instance)
               .filter(email__isnull=False)
-              .filter(subscription_confirmed=True)
               .filter(subscribed=True))
 
         print(f"Subscribers: {rs.count()}")
