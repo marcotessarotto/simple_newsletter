@@ -106,6 +106,7 @@ class VisitSurveyAdmin(admin.ModelAdmin, ExportExcelMixin):
 class EventLogAdmin(admin.ModelAdmin):
     list_display = ('id', 'created_at', 'event_type', 'event_title', 'event_target', 'event_data', 'created_at')
     list_filter = [ 'event_type']
+    search_fields = ('event_type', 'event_title', 'event_data', 'event_target')
 
 
 @admin.register(EmailTemplate)
