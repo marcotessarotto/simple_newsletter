@@ -73,6 +73,7 @@ class Command(BaseCommand):
         rs = (SubscriptionToNewsletter.objects
               .filter(newsletter=newsletter_instance)
               .filter(email__isnull=False)
+              .filter(subscription_confirmed=True)
               .filter(subscribed=True))
 
         print(f"Subscribers: {rs.count()}")
