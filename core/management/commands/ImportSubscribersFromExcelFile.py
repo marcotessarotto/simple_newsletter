@@ -43,7 +43,7 @@ class Command(BaseCommand):
                     continue
 
                 if row['email'] is None:
-                    print(f"email is None, skipping... email: {row['email']}")
+                    print(f"email is None, skipping... index: {index}, row: {row}")
                     continue
 
                 # check if the email address is already in the database
