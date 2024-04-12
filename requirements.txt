@@ -20,5 +20,6 @@ pandas
 django-otp
 django-two-factor-auth[phonenumbers]
 django-debug-toolbar
+djangorestframework
 
 

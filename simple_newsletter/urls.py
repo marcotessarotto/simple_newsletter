@@ -20,6 +20,7 @@ from django.urls import path, include, re_path
 
 from core import views
 from core.views import proxy_django_auth, home, notify_media_access
+from core.wsapi import SubscriptionCreateView
 from simple_newsletter import settings
 from two_factor.urls import urlpatterns as tf_urls
 
@@ -53,6 +54,8 @@ urlpatterns = [
 
     # path('mdl/<int:media_id>/<str:url>', views.download_media, name='download_media'),
     re_path(r'^mdl/(?P<media_id>\d+)/(?P<random_string>[a-zA-Z0-9]+)/(?P<url>.+)$', views.download_media, name='download_media'),
+
+    path('api/subscribe/', SubscriptionCreateView.as_view(), name='api-subscribe'),
 
 ]
 
